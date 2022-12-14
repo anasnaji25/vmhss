@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "271678574303",
+    "firebase_url": "https://vmhsschool-88969-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "vmhsschool-88969",
+    "storage_bucket": "vmhsschool-88969.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271678574303:android:24e0a21591ded839b6636a",
+        "android_client_info": {
+          "package_name": "com.example.attandence_admin_panel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271678574303-2gd77q43c8fna5367u369n3iirkr43h7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoRBigxjzBy3hnDxukOBW6zvXHFUGIvt8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271678574303-2gd77q43c8fna5367u369n3iirkr43h7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "271678574303-oc69tvsqirq2bav67ds9tjp280tl2r4i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.attandenceAdminPanel"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
