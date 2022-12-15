@@ -69,7 +69,7 @@ class LeftBar extends StatelessWidget {
             icon: Icons.photo_size_select_small_outlined,
             text: 'Section',
             onPress: () {
-              Get.to(() => SetionView());
+              Get.to(() => SectionView());
             },
           ),
           h20,

@@ -123,7 +123,7 @@ class _DashBoardViewState extends State<DashBoardView> {
               ),
               InkWell(
                 onTap: () {
-                  Get.to(() => SetionView());
+                  Get.to(() => SectionView());
                 },
                 child: Column(
                   children: [
