@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SectionController extends GetxController {
-  var sectionSecled;
+  var sectionSelected;
   var teacherSelected;
 
   List<String> sectionsList = [];
@@ -50,7 +50,6 @@ class SectionController extends GetxController {
     sectionModelList.clear();
     CollectionReference users =
         FirebaseFirestore.instance.collection(sectionCollection);
-
     users.add(sectionModel.toJson()).then((value) {
       getSections();
       Get.snackbar("Section added successfully", "",

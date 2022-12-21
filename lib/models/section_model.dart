@@ -1,4 +1,5 @@
 class SectionModel {
+  String id;
   String standerd;
   String section;
   String classTeacher;
@@ -6,6 +7,7 @@ class SectionModel {
 
   SectionModel(
       {required this.standerd,
+      this.id = "",
       required this.classTeacher,
       required this.section,
       required this.subject});
@@ -18,6 +20,4 @@ class SectionModel {
       "subject": subject,
     };
   }
-
-
 }

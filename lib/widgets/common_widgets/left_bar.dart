@@ -1,4 +1,5 @@
 import 'package:attandence_admin_panel/views/dash_board_view/home_page_view.dart';
+import 'package:attandence_admin_panel/views/exam_view/exam_list_view.dart';
 import 'package:attandence_admin_panel/views/sections_view/section_view.dart';
 import 'package:attandence_admin_panel/views/staff_management/staff_detsils_list_view.dart';
 import 'package:attandence_admin_panel/views/student_management/students_list_view.dart';
@@ -69,7 +70,7 @@ class LeftBar extends StatelessWidget {
             icon: Icons.photo_size_select_small_outlined,
             text: 'Section',
             onPress: () {
-              Get.to(() => SetionView());
+              Get.to(() => SectionView());
             },
           ),
           h20,
@@ -112,7 +113,9 @@ class LeftBar extends StatelessWidget {
             //   onPress: () {
             //   Get.to(() => const HomePageView());
             // },
-            onPress: () {},
+            onPress: () {
+              Get.to(()=> ExamListView());
+            },
           ),
           h20,
           IconBox(
