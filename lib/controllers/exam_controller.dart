@@ -17,7 +17,6 @@ class ExamController extends GetxController {
   writeToExamList(ExamModel examModel) async {
     CollectionReference users =
         FirebaseFirestore.instance.collection(examCollections);
-
     users.add(examModel.toJson()).then((value) {
       Get.snackbar("Exam Addedd successfully", "",
           maxWidth: 400,
