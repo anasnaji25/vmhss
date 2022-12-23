@@ -211,17 +211,18 @@ class _ExamListViewState extends State<ExamListView> {
                                 if (examTextController.text.isNotEmpty &&
                                     startDateController.text.isNotEmpty &&
                                     endDateController.text.isNotEmpty) {
-                                        ExamModel examModel = ExamModel(
-                                      examName: examTextController.text,
-                                      examStartDate: _date,
-                                      examEndDate: _date2,
-                                     );
+                                  ExamModel examModel = ExamModel(
+                                    docId: "",
+                                    examName: examTextController.text,
+                                    examStartDate: _date,
+                                    examEndDate: _date2,
+                                  );
 
                                   examController.writeToExamList(examModel);
-                                    examController.geteExams();
-                                     examController.update();
+                                  examController.geteExams();
+                                  examController.update();
                                   Get.back();
-                                 
+
                                   // _dialogBuilder2(context);
                                 } else {
                                   Get.snackbar("Fill All The Fields", "",
@@ -395,20 +396,20 @@ class _ExamListViewState extends State<ExamListView> {
 
                                     List<ExamSubjectModel> examSubjectList = [];
 
-                                    examController.subjectList
-                                        .forEach((element) {
-                                      if (element.isSelected) {
-                                        ExamSubjectModel exModel =
-                                            ExamSubjectModel(
-                                                examDate: _date,
-                                                examEndingTime: DateTime.now(),
-                                                examStartingTime:
-                                                    DateTime.now(),
-                                                subjectName:
-                                                    element.subjectName);
-                                        examSubjectList.add(exModel);
-                                      }
-                                    });
+                                    // examController.subjectList
+                                    //     .forEach((element) {
+                                    //   if (element.isSelected) {
+                                    //     ExamSubjectModel exModel =
+                                    //         ExamSubjectModel(
+                                    //             examDate: _date,
+                                    //             examEndingTime: DateTime.now(),
+                                    //             examStartingTime:
+                                    //                 DateTime.now(),
+                                    //             subjectName:
+                                    //                 element.subjectName);
+                                    //     examSubjectList.add(exModel);
+                                    //   }
+                                    // });
                                     // ExamModel examModel = ExamModel(
                                     //     className: sectionModel.standerd,
                                     //     section: sectionModel.section,
@@ -857,7 +858,12 @@ class _ExamListViewState extends State<ExamListView> {
                                                       child: InkWell(
                                                         onTap: () {
                                                           Get.to(
-                                                              AddClassExamView());
+                                                              AddClassExamView(
+                                                            docId:
+                                                                examController
+                                                                    .examList[i]
+                                                                    .docId,
+                                                          ));
                                                         },
                                                         child: const Padding(
                                                           padding:

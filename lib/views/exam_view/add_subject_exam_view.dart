@@ -247,7 +247,7 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
                                   InkWell(
                                       onTap: () {
                                         Get.back();
-                                        Get.to(AddClassExamView());
+                                        // Get.to(AddClassExamView());
                                       },
                                       child: Icon(Icons.arrow_back)),
                                   Text(

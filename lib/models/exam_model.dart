@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ExamModel {
+  String docId;
   String examName;
   DateTime examStartDate;
   DateTime examEndDate;
 
   ExamModel({
+    required this.docId,
     required this.examName,
     required this.examStartDate,
     required this.examEndDate,
@@ -23,21 +25,18 @@ class ExamModel {
 class ExamSubjectModel {
   String subjectName;
   DateTime examDate;
-  DateTime examStartingTime;
-  DateTime examEndingTime;
+  int passMark;
 
   ExamSubjectModel(
       {required this.subjectName,
       required this.examDate,
-      required this.examEndingTime,
-      required this.examStartingTime});
+      required this.passMark});
 
   Map<String, dynamic> toJson() {
     return {
       "subject_name": subjectName,
       "exam_date": examDate,
-      "exam_starting_time": examStartingTime,
-      "exam_ending_time": examEndingTime,
+      "pass_mark": passMark,
     };
   }
 }

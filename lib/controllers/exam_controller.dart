@@ -3,6 +3,7 @@ import 'package:attandence_admin_panel/models/exam_model.dart';
 import 'package:attandence_admin_panel/models/exam_model_test.dart';
 import 'package:attandence_admin_panel/views/exam_view/exam_list_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,23 +31,62 @@ class ExamController extends GetxController {
     });
   }
 
-  writeToExamClassList(ExamClassModel examClassModel, String docId) async {
+  addExamClassSubjects(
+      List<dynamic> subjects, String examDocID, String classDocID) {
+    subjects.forEach((element) {
+      ExamSubjectModel examSubjectModel = ExamSubjectModel(
+          subjectName: element, examDate: DateTime(3000), passMark: 0);
+
+      writeToExamClassSubjets(examSubjectModel, examDocID, classDocID);
+    });
+  }
+
+  writeToExamClassSubjets(ExamSubjectModel examSubjectModel, String examDocID,
+      String classDocID) async {
+    CollectionReference users = FirebaseFirestore.instance
+        .collection(examCollections)
+        .doc(examDocID)
+        .collection(examClassCollections)
+        .doc(classDocID)
+        .collection(examSubjectsCollections);
+
+    users.add(examSubjectModel.toJson()).then((value) {
+      Get.closeAllSnackbars();
+      Get.snackbar("Exam Addedd successfully", "",
+          maxWidth: 400,
+          colorText: Colors.white,
+          backgroundColor: Colors.green);
+      // Get.off(() => const ExamListView());
+    }).catchError((error) {
+      print(error);
+      Get.snackbar("Something went wrong", "",
+          maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
+    });
+  }
+
+  writeToExamClassList(ExamClassModel examClassModel, String docId,
+      List<dynamic> subjects) async {
     CollectionReference users = FirebaseFirestore.instance
         .collection(examCollections)
         .doc(docId)
         .collection(examClassCollections);
 
     users.add(examClassModel.toJson()).then((value) {
+      addExamClassSubjects(subjects, docId, value.id);
+      // await Future.delayed(Duration(seconds: 1));
+      Get.closeAllSnackbars();
       Get.snackbar("Exam Addedd successfully", "",
           maxWidth: 400,
           colorText: Colors.white,
           backgroundColor: Colors.green);
-      Get.off(() => const ExamListView());
+      // Get.off(() => const ExamListView());
     }).catchError((error) {
       print(error);
       Get.snackbar("Something went wrong", "",
           maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
     });
+
+    geteExamClasses(docId);
   }
 
   getSubjects(List<dynamic> subjetcts) {
@@ -67,6 +107,7 @@ class ExamController extends GetxController {
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
         ExamModel examDetails = ExamModel(
+          docId: doc.id,
           examName: doc["exam_name"],
           examStartDate: (doc["exam_start_time"] as Timestamp).toDate(),
           examEndDate: (doc["exam_end_date"] as Timestamp).toDate(),
@@ -79,6 +120,7 @@ class ExamController extends GetxController {
 
   geteExamClasses(String docId) async {
     examClassist.clear();
+    update();
     FirebaseFirestore.instance
         .collection(examCollections)
         .doc(docId)
@@ -92,9 +134,10 @@ class ExamController extends GetxController {
           section: doc["section"],
         );
         examClassist.add(examDetails);
+         update();
       }
-      update();
     });
+   
   }
 }
 
