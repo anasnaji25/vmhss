@@ -4,7 +4,9 @@ import 'package:attandence_admin_panel/constants/app_colors.dart';
 import 'package:attandence_admin_panel/constants/app_fonts.dart';
 import 'package:attandence_admin_panel/constants/app_styles.dart';
 import 'package:attandence_admin_panel/constants/helper_widgets.dart';
+import 'package:attandence_admin_panel/controllers/sections_controller.dart';
 import 'package:attandence_admin_panel/controllers/student_management_controller.dart';
+import 'package:attandence_admin_panel/models/section_model.dart';
 import 'package:attandence_admin_panel/models/student_model.dart';
 import 'package:attandence_admin_panel/widgets/common_widgets/left_bar.dart';
 import 'package:attandence_admin_panel/widgets/common_widgets/right_bar.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 
 import '../../constants/decoration.dart';
@@ -32,6 +35,7 @@ class _StudentManagementViewState extends State<StudentManagementView> {
   final studentController = Get.find<StudentManagementController>();
   var startDateController = TextEditingController();
   var endDateController = TextEditingController();
+  final sectionController = Get.find<SectionController>();
 
   bool isLoading = false;
 
@@ -86,6 +90,10 @@ class _StudentManagementViewState extends State<StudentManagementView> {
     "Jain"
   ];
 
+  String className = "";
+  String classId = "";
+  String section = "";
+
   _selectedDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -117,6 +125,8 @@ class _StudentManagementViewState extends State<StudentManagementView> {
       });
     }
   }
+
+  dynamic classSelected;
 
   var fullNameController = TextEditingController();
   var fatherNameController = TextEditingController();
@@ -153,10 +163,16 @@ class _StudentManagementViewState extends State<StudentManagementView> {
   String imageName = "";
 
   chooseImage() async {
-    Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
-    setState(() {
-      imagePath = bytesFromPicker!;
-    });
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+    );
+    imagePath = await pickedFile!.readAsBytes();
+    imageName = pickedFile.path;
+    setState(() {});
+    // Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
+    // setState(() {
+    //   imagePath = bytesFromPicker!;
+    // });
   }
 
   Uint8List? filePath;
@@ -227,6 +243,12 @@ class _StudentManagementViewState extends State<StudentManagementView> {
       file4 = File(path);
       filePath4 = fileBytes4;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    sectionController.getSections();
   }
 
   @override
@@ -767,6 +789,67 @@ class _StudentManagementViewState extends State<StudentManagementView> {
                                   labelText: 'Mother Tongue',
                                   maxLine: 1,
                                 ),
+                                GetBuilder<SectionController>(builder: (_) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 15, right: 15),
+                                    child: Container(
+                                      height: 50,
+                                      width: 330,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Colors.black54
+                                                  .withOpacity(0.5))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10, top: 10),
+                                        child: DropdownButton<SectionModel>(
+                                          value: classSelected,
+                                          isExpanded: true,
+                                          icon: const Icon(Icons
+                                              .keyboard_arrow_down_outlined),
+                                          elevation: 0,
+                                          itemHeight: 55,
+                                          isDense: true,
+                                          style: const TextStyle(
+                                              color: Colors.black54),
+                                          hint: Text(
+                                            "Section*",
+                                            style: primaryFonts.copyWith(
+                                                fontSize: 14),
+                                          ),
+                                          onChanged: (SectionModel? value) {
+                                            // This is called when the user selects an item.
+                                            setState(() {
+                                              classSelected = value!;
+                                              className = value.standerd;
+                                              classId = value.id;
+                                              section = value.section;
+                                            });
+
+                                            // List<SectionModel> sectionModelList
+                                          },
+                                          items: sectionController
+                                              .sectionModelList
+                                              .map<
+                                                      DropdownMenuItem<
+                                                          SectionModel>>(
+                                                  (SectionModel value) {
+                                            return DropdownMenuItem<
+                                                SectionModel>(
+                                              value: value,
+                                              child: Text(
+                                                  "${value.standerd} ${value.section}"),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
                                 TextFieldCommon(
                                   controller: firstLanguageController,
                                   labelText: 'First Language',
@@ -1281,6 +1364,9 @@ class _StudentManagementViewState extends State<StudentManagementView> {
                               markSheet: markSheet,
                               aadhaarCard: aadhaarCard,
                               transferCertificate: transferCertificate,
+                              classId: classId,
+                              joinedClass: className,
+                              section: section,
                               birthCertificate: birthCertificate);
                           studentController
                               .writeToStudentManagement(studentModel);

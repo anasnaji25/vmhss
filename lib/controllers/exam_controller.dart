@@ -12,6 +12,7 @@ class ExamController extends GetxController {
   List<ExamModel> examList = [];
 
   List<ExamTempSubjectModel> subjectList = [];
+  List<ExamSubjectModel> examSubjectList = [];
 
   List<ExamClassModel> examClassist = [];
 
@@ -75,7 +76,8 @@ class ExamController extends GetxController {
       addExamClassSubjects(subjects, docId, value.id);
       // await Future.delayed(Duration(seconds: 1));
       Get.closeAllSnackbars();
-      Get.snackbar("Exam Addedd successfully", "",
+
+      Get.snackbar("Class Addedd successfully", "",
           maxWidth: 400,
           colorText: Colors.white,
           backgroundColor: Colors.green);
@@ -85,8 +87,6 @@ class ExamController extends GetxController {
       Get.snackbar("Something went wrong", "",
           maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
     });
-
-    geteExamClasses(docId);
   }
 
   getSubjects(List<dynamic> subjetcts) {
@@ -120,7 +120,7 @@ class ExamController extends GetxController {
 
   geteExamClasses(String docId) async {
     examClassist.clear();
-    update();
+
     FirebaseFirestore.instance
         .collection(examCollections)
         .doc(docId)
@@ -129,15 +129,36 @@ class ExamController extends GetxController {
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
         ExamClassModel examDetails = ExamClassModel(
-          classId: doc["class_id"],
+          classId: doc.id,
           className: doc["class_name"],
           section: doc["section"],
         );
         examClassist.add(examDetails);
-         update();
+        update();
       }
     });
-   
+  }
+
+  geteExamClassSubjects(String examdocId, String classDocId) async {
+    examSubjectList.clear();
+
+    FirebaseFirestore.instance
+        .collection(examCollections)
+        .doc(examdocId)
+        .collection(examClassCollections)
+        .doc(classDocId)
+        .collection(examSubjectsCollections)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        ExamSubjectModel examDetails = ExamSubjectModel(
+            examDate: (doc["exam_date"] as Timestamp).toDate(),
+            passMark: doc["pass_mark"],
+            subjectName: doc["subject_name"]);
+        examSubjectList.add(examDetails);
+        update();
+      }
+    });
   }
 }
 

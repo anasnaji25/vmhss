@@ -36,44 +36,46 @@ class StudentManagementController extends GetxController {
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
         StudentModel studentModel = StudentModel(
-          image: doc["image"],
-          fullName: doc["full_name"],
-          admissionNumber: doc["admission_number"],
-          gender: doc["gender"],
-          address: doc["address"],
-          joiningStandard: doc["joining_standard"],
-          dob: (doc["dob"] as Timestamp).toDate(),
-          joiningDate: (doc["joining_date"] as Timestamp).toDate(),
-          medium: doc["medium"],
-          firstLanguage: doc["first_language"],
-          nationality: doc["nationality"],
-          state: doc["state"],
-          religion: doc["religion"],
-          caste: doc["caste"],
-          community: doc["community"],
-          motherTongue: doc["mother_tongue"],
-          previousSchool: doc["previous_school"],
-          previousStandard: doc["previous_standard"],
-          fatherName: doc["father_name"],
-          emisCode: doc["EMIS_code"],
-          busStop: doc["bus_stop"],
-          route: doc["route"],
-          transport: doc["transport"],
-          guardianAddress: doc["guardian_address"],
-          guardianMobileNumber: doc["guardian_mobile_number"],
-          guardianName: doc["guardian_name"],
-          mobileNumber: doc["mobile_number"],
-          monthlyIncome: doc["monthly_income"],
-          motherQualification: doc["mother_qualification"],
-          fatherQualification: doc["father_qualification"],
-          motherOccupation: doc["mother_occupation"],
-          fatherOccupation: doc["father_occupation"],
-          motherName: doc["mother_name"],
-          markSheet: doc['mark_sheet'],
-          aadhaarCard: doc['aadhaar_card'],
-          transferCertificate: doc['transfer_certificate'],
-          birthCertificate: doc['birth_certificate'],
-        );
+            image: doc["image"],
+            fullName: doc["full_name"],
+            admissionNumber: doc["admission_number"],
+            gender: doc["gender"],
+            address: doc["address"],
+            joiningStandard: doc["joining_standard"],
+            dob: (doc["dob"] as Timestamp).toDate(),
+            joiningDate: (doc["joining_date"] as Timestamp).toDate(),
+            medium: doc["medium"],
+            firstLanguage: doc["first_language"],
+            nationality: doc["nationality"],
+            state: doc["state"],
+            religion: doc["religion"],
+            caste: doc["caste"],
+            community: doc["community"],
+            motherTongue: doc["mother_tongue"],
+            previousSchool: doc["previous_school"],
+            previousStandard: doc["previous_standard"],
+            fatherName: doc["father_name"],
+            emisCode: doc["EMIS_code"],
+            busStop: doc["bus_stop"],
+            route: doc["route"],
+            transport: doc["transport"],
+            guardianAddress: doc["guardian_address"],
+            guardianMobileNumber: doc["guardian_mobile_number"],
+            guardianName: doc["guardian_name"],
+            mobileNumber: doc["mobile_number"],
+            monthlyIncome: doc["monthly_income"],
+            motherQualification: doc["mother_qualification"],
+            fatherQualification: doc["father_qualification"],
+            motherOccupation: doc["mother_occupation"],
+            fatherOccupation: doc["father_occupation"],
+            motherName: doc["mother_name"],
+            markSheet: doc['mark_sheet'],
+            aadhaarCard: doc['aadhaar_card'],
+            transferCertificate: doc['transfer_certificate'],
+            birthCertificate: doc['birth_certificate'],
+            classId: doc["class_id"],
+            joinedClass: doc["joined_class"],
+            section: doc["section"]);
         studentsList.add(studentModel);
       }
       update();
@@ -84,15 +86,17 @@ class StudentManagementController extends GetxController {
       {required Uint8List? images,
       required String studentName,
       required String imageName}) async {
-    print("::::::::::::::1:::::::::::::::::::");
+    print("::::::::::::::::::::1:::::::::::::::::::");
     final storageReference =
         FirebaseStorage.instance.ref().child("Students/$studentName");
-    print("::::::::::::::2:::::::::::::::::::");
+    print("::::::::::::::::::::2:::::::::::::::::::");
     await storageReference.putData(images!);
-    print("::::::::::::::3:::::::::::::::::::");
+    print("::::::::::::::::::::3:::::::::::::::::::");
     final String imageUrl = await storageReference.getDownloadURL();
     return imageUrl;
   }
+
+
 
   Future<String> storeFiles(
       {required Uint8List? file,

@@ -36,6 +36,9 @@ class StudentModel {
   String transferCertificate;
   String aadhaarCard;
   String markSheet;
+  String joinedClass;
+  String section;
+  String classId;
 
   StudentModel(
       {required this.image,
@@ -74,6 +77,9 @@ class StudentModel {
       required this.markSheet,
       required this.aadhaarCard,
       required this.transferCertificate,
+      required this.joinedClass,
+      required this.section,
+      required this.classId,
       required this.birthCertificate});
 
   Map<String, dynamic> toJson() {
@@ -115,6 +121,9 @@ class StudentModel {
       "transfer_certificate": transferCertificate,
       "aadhaar_card": aadhaarCard,
       "mark_sheet": markSheet,
+      "joined_class": joinedClass,
+      "section": section,
+      "class_id": classId
     };
   }
 }

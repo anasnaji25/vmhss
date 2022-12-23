@@ -204,6 +204,7 @@ class _AddClassExamViewState extends State<AddClassExamView> {
                                             .sectionModelList[i].subject);
                                   }
                                 }
+                                examController.geteExamClasses(widget.docId);
                                 Get.back();
                                 // const AddClassExamView();
                               },
@@ -601,7 +602,16 @@ class _AddClassExamViewState extends State<AddClassExamView> {
                                                       child: InkWell(
                                                         onTap: () {
                                                           Get.to(() =>
-                                                              const AddSubjectExamView());
+                                                              AddSubjectExamView(
+                                                                examDocID:
+                                                                    widget
+                                                                        .docId,
+                                                                classDocId:
+                                                                    examController
+                                                                        .examClassist[
+                                                                            i]
+                                                                        .classId,
+                                                              ));
                                                         },
                                                         child: const Padding(
                                                           padding:

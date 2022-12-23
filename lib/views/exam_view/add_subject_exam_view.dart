@@ -1,4 +1,5 @@
 import 'package:attandence_admin_panel/constants/app_fonts.dart';
+import 'package:attandence_admin_panel/controllers/exam_controller.dart';
 import 'package:attandence_admin_panel/controllers/staff_management_controller.dart';
 import 'package:attandence_admin_panel/views/exam_view/add_class_exam_view.dart';
 import 'package:attandence_admin_panel/views/staff_management/staff_management.dart';
@@ -16,7 +17,10 @@ import '../../widgets/common_widgets/common_app_bar.dart';
 import '../profile_view/profile_view.dart';
 
 class AddSubjectExamView extends StatefulWidget {
-  const AddSubjectExamView({super.key});
+  String examDocID;
+  String classDocId;
+  AddSubjectExamView(
+      {super.key, required this.classDocId, required this.examDocID});
 
   @override
   State<AddSubjectExamView> createState() => _AddSubjectExamViewState();
@@ -29,11 +33,13 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
   final staffManageController = Get.find<StaffManagementController>();
   final subjectTextController = TextEditingController();
   final passMarkTextController = TextEditingController();
+  final examController = Get.find<ExamController>();
 
   @override
   void initState() {
     super.initState();
-    staffManageController.getStaffs();
+    // staffManageController.getStaffs();
+    examController.geteExamClassSubjects(widget.examDocID, widget.classDocId);
   }
 
   DateTime _date = DateTime.now();
@@ -83,7 +89,6 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
                             InkWell(
                                 onTap: () {
                                   Get.back();
-                                  const AddSubjectExamView();
                                 },
                                 child: const Icon(
                                   Icons.close,
@@ -178,7 +183,6 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
                             InkWell(
                               onTap: () {
                                 Get.back();
-                                const AddSubjectExamView();
                               },
                               child: Container(
                                 height: 40,
@@ -219,7 +223,7 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
           children: [
             const LeftBar(),
             Expanded(
-              child: GetBuilder<StaffManagementController>(builder: (_) {
+              child: GetBuilder<ExamController>(builder: (_) {
                 return Container(
                   decoration: BoxDecoration(color: HexColor('#e3f2fd')),
                   height: size.height,
@@ -301,45 +305,45 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20),
-                                        child: InkWell(
-                                          onTap: () {
-                                            _dialogBuilder(context);
-                                          },
-                                          child: Container(
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                color: HexColor('#0F2878'),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.7),
-                                                      blurRadius: 3)
-                                                ]),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 20,
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: const [
-                                                  Text(
-                                                    "ADD SUBJECT",
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                      // Padding(
+                                      //   padding:
+                                      //       const EdgeInsets.only(left: 20),
+                                      //   child: InkWell(
+                                      //     onTap: () {
+                                      //       _dialogBuilder(context);
+                                      //     },
+                                      //     child: Container(
+                                      //       height: 40,
+                                      //       decoration: BoxDecoration(
+                                      //           borderRadius:
+                                      //               BorderRadius.circular(15),
+                                      //           color: HexColor('#0F2878'),
+                                      //           boxShadow: [
+                                      //             BoxShadow(
+                                      //                 color: Colors.grey
+                                      //                     .withOpacity(0.7),
+                                      //                 blurRadius: 3)
+                                      //           ]),
+                                      //       child: Padding(
+                                      //         padding:
+                                      //             const EdgeInsets.symmetric(
+                                      //           horizontal: 20,
+                                      //         ),
+                                      //         child: Row(
+                                      //           mainAxisAlignment:
+                                      //               MainAxisAlignment.center,
+                                      //           children: const [
+                                      //             Text(
+                                      //               "ADD SUBJECT",
+                                      //               style: TextStyle(
+                                      //                   color: Colors.white),
+                                      //             )
+                                      //           ],
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
                                     ],
                                   )
                                 ],
@@ -502,73 +506,51 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
                               ),
                             ),
                             h10,
-                            // for (int i = 0;
-                            //     i < staffManageController.staffList.length;
-                            //     i++)
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 1,
-                                            offset:
-                                                Offset(0, 1), // Shadow position
-                                          ),
-                                        ],
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            width: 40,
-                                            child: Text(
-                                              (0 + 1).toString(),
-                                              style: primaryFonts.copyWith(
-                                                  color: Colors.black,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
+                            for (int i = 0;
+                                i < examController.examSubjectList.length;
+                                i++)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 1,
+                                              offset: Offset(
+                                                  0, 1), // Shadow position
                                             ),
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            child: Text(
-                                              staffManageController
-                                                  .staffList[0].designation,
-                                              style: primaryFonts.copyWith(
-                                                  color: Colors.black,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            child: Text(
-                                              staffManageController
-                                                  .staffList[0].designation,
-                                              style: primaryFonts.copyWith(
-                                                  color: Colors.black,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            height: 55,
-                                            child: Flexible(
+                                          ],
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              width: 40,
                                               child: Text(
-                                                staffManageController
-                                                    .staffList[0].address,
+                                                (i + 1).toString(),
+                                                style: primaryFonts.copyWith(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 150,
+                                              child: Text(
+                                                examController
+                                                    .examSubjectList[i]
+                                                    .subjectName,
                                                 style: primaryFonts.copyWith(
                                                     color: Colors.black,
                                                     fontSize: 15,
@@ -576,57 +558,88 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
                                                         FontWeight.w500),
                                               ),
                                             ),
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  height: 20,
-                                                  width: 40,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      color: Colors.red),
-                                                  alignment: Alignment.center,
-                                                  child: const Icon(
-                                                    Icons.delete,
-                                                    size: 15,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                w10,
-                                                Container(
-                                                  height: 20,
-                                                  width: 40,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      color: Colors.blue),
-                                                  alignment: Alignment.center,
-                                                  child: const Icon(
-                                                    Icons.edit,
-                                                    size: 15,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
+                                            Container(
+                                              width: 150,
+                                              child: Text(
+                                                examController
+                                                    .examSubjectList[i]
+                                                    .examDate
+                                                    .year
+                                                    .toString(),
+                                                style: primaryFonts.copyWith(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
                                             ),
-                                          )
-                                        ],
+                                            Container(
+                                              width: 150,
+                                              height: 55,
+                                              child: Flexible(
+                                                child: Text(
+                                                  examController
+                                                      .examSubjectList[i]
+                                                      .passMark
+                                                      .toString(),
+                                                  style: primaryFonts.copyWith(
+                                                      color: Colors.black,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 150,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    height: 20,
+                                                    width: 40,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        color: Colors.red),
+                                                    alignment: Alignment.center,
+                                                    child: const Icon(
+                                                      Icons.delete,
+                                                      size: 15,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  w10,
+                                                  Container(
+                                                    height: 20,
+                                                    width: 40,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        color: Colors.blue),
+                                                    alignment: Alignment.center,
+                                                    child: const Icon(
+                                                      Icons.edit,
+                                                      size: 15,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  )
-                                ],
+                                    const SizedBox(
+                                      height: 15,
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
