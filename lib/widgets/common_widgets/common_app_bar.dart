@@ -1,8 +1,7 @@
+import 'package:attandence_admin_panel/views/profile_view/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-
-import '../../views/profile_view/profile_view.dart';
 
 PreferredSize customAppBar() {
   return PreferredSize(
@@ -17,6 +16,10 @@ PreferredSize customAppBar() {
           height: 70,
           width: 70,
         ),
+      ),
+      title: Text(
+        'Vedhathri Maharishi Hr Sec School'.toUpperCase(),
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
       leadingWidth: 100,
       centerTitle: true,
@@ -48,7 +51,7 @@ PreferredSize customAppBar() {
               padding: const EdgeInsets.only(right: 10, left: 15),
               child: Container(
                 height: 36,
-                width: 74,
+                width: 76,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   color: HexColor('#F7E467'),
@@ -60,27 +63,28 @@ PreferredSize customAppBar() {
                     ),
                   ],
                 ),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  InkWell(
-                    onTap: () {
-                      Get.to(() => const ProfileView());
-                    },
-                    child: Icon(
-                      Icons.person,
-                      color: HexColor('#5E72C4'),
-                      size: 23,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Icon(
-                    Icons.settings_outlined,
-                    color: HexColor('#5E72C4'),
-                    size: 23,
-                  )
-                ]),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Get.to(() => const ProfileView());
+                        },
+                        child: Icon(
+                          Icons.person,
+                          color: HexColor('#5E72C4'),
+                          size: 23,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: Icon(
+                          Icons.logout,
+                          color: HexColor('#5E72C4'),
+                          size: 22,
+                        ),
+                      )
+                    ]),
               ),
             ),
           ],

@@ -1,5 +1,7 @@
+import 'package:attandence_admin_panel/views/attendance/attendance_view.dart';
 import 'package:attandence_admin_panel/views/dash_board_view/home_page_view.dart';
 import 'package:attandence_admin_panel/views/exam_view/exam_list_view.dart';
+import 'package:attandence_admin_panel/views/mark/mark_view.dart';
 import 'package:attandence_admin_panel/views/sections_view/section_view.dart';
 import 'package:attandence_admin_panel/views/staff_management/staff_detsils_list_view.dart';
 import 'package:attandence_admin_panel/views/student_management/students_list_view.dart';
@@ -104,7 +106,9 @@ class LeftBar extends StatelessWidget {
             //   onPress: () {
             //   Get.to(() => const HomePageView());
             // },
-            onPress: () {},
+            onPress: () {
+              Get.to(() => AttendanceView());
+            },
           ),
 
           h20,
@@ -114,7 +118,7 @@ class LeftBar extends StatelessWidget {
             //   Get.to(() => const HomePageView());
             // },
             onPress: () {
-              Get.to(()=> ExamListView());
+              Get.to(() => ExamListView());
             },
           ),
           h20,
@@ -123,7 +127,9 @@ class LeftBar extends StatelessWidget {
             //   onPress: () {
             //   Get.to(() => const HomePageView());
             // },
-            onPress: () {},
+            onPress: () {
+              Get.to(()=> MarkView());
+            },
           ),
 
           const SizedBox(

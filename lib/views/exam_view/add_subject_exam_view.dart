@@ -45,11 +45,11 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
   DateTime _date = DateTime.now();
   var dateController = TextEditingController();
 
-  _selectedDate(BuildContext context) async {
+  _selectedDate(BuildContext context, String subjectDocId) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: _date,
-        firstDate: DateTime.now().subtract(const Duration(days: 10000)),
+        firstDate: DateTime.now(),
         lastDate: DateTime.now().add(const Duration(days: 700)));
 
     if (picked != null && picked != _date) {
@@ -57,6 +57,11 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
       setState(() {
         _date = picked;
         dateController.text = formatDate(picked, [dd, "-", mm, "-", yyyy]);
+        examController.updateExamDate(
+            examdocId: widget.examDocID,
+            classDocId: widget.classDocId,
+            subjectDocId: subjectDocId,
+            date: _date);
       });
     }
   }
@@ -137,7 +142,7 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
                                   controller: dateController,
                                   readOnly: true,
                                   onTap: () {
-                                    _selectedDate(context);
+                                    // _selectedDate(context);
                                   },
                                   decoration: InputDecoration(
                                     suffixIcon: const Icon(Icons.date_range),
@@ -560,34 +565,141 @@ class _AddSubjectExamViewState extends State<AddSubjectExamView> {
                                             ),
                                             Container(
                                               width: 150,
-                                              child: Text(
-                                                examController
-                                                    .examSubjectList[i]
-                                                    .examDate
-                                                    .year
-                                                    .toString(),
-                                                style: primaryFonts.copyWith(
-                                                    color: Colors.black,
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
+                                              child: examController
+                                                          .examSubjectList[i]
+                                                          .examDate
+                                                          .year ==
+                                                      3000
+                                                  ? Row(
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: () {
+                                                            _selectedDate(
+                                                                context,
+                                                                    examController
+                                                                        .examSubjectList[i].id);
+                                                          },
+                                                          child: Container(
+                                                            height: 30,
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.7),
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .withOpacity(
+                                                                            0.5)),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      blurRadius:
+                                                                          3,
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .withOpacity(
+                                                                              0.5))
+                                                                ],
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            30)),
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 10,
+                                                                      right:
+                                                                          10),
+                                                              child: Text(
+                                                                "Choose",
+                                                                style: primaryFonts.copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : Text(
+                                                    formatDate(examController
+                                                          .examSubjectList[i]
+                                                          .examDate, [dd, "-", mm, "-", yyyy])
+                                                      ,
+                                                      style:
+                                                          primaryFonts.copyWith(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                    ),
                                             ),
+                                            // Container(
+                                            //   width: 150,
+                                            //   height: 55,
+                                            //   child: Flexible(
+                                            //     child: Text(
+                                            //       examController
+                                            //           .examSubjectList[i]
+                                            //           .passMark
+                                            //           .toString(),
+                                            //       style: primaryFonts.copyWith(
+                                            //           color: Colors.black,
+                                            //           fontSize: 15,
+                                            //           fontWeight:
+                                            //               FontWeight.w500),
+                                            //     ),
+                                            //   ),
+                                            // ),
                                             Container(
                                               width: 150,
                                               height: 55,
-                                              child: Flexible(
-                                                child: Text(
-                                                  examController
-                                                      .examSubjectList[i]
-                                                      .passMark
-                                                      .toString(),
-                                                  style: primaryFonts.copyWith(
-                                                      color: Colors.black,
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    width: 80,
+                                                    height: 55,
+                                                    child: TextField(
+                                                      onChanged: (value) {
+                                                        examController.updatePassMark(examdocId: widget.examDocID, classDocId: widget.classDocId, subjectDocId:  examController
+                                                                        .examSubjectList[i].id, passMark: value);
+                                                      },
+                                                      decoration: InputDecoration(
+                                                          isDense: true,
+                                                          hintText: examController
+                                                              .examSubjectList[
+                                                                  i]
+                                                              .passMark
+                                                              .toString(),
+                                                              hintStyle: primaryFonts.copyWith(
+                                                                fontWeight: FontWeight.w600,
+                                                                color: Colors.black87
+                                                              ),
+                                                          focusedBorder: OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                      10),
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                      color: Colors
+                                                                          .black)),
+                                                          enabledBorder: OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                      10),
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                      color: Colors
+                                                                          .black))),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                             Container(

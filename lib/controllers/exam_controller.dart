@@ -36,7 +36,7 @@ class ExamController extends GetxController {
       List<dynamic> subjects, String examDocID, String classDocID) {
     subjects.forEach((element) {
       ExamSubjectModel examSubjectModel = ExamSubjectModel(
-          subjectName: element, examDate: DateTime(3000), passMark: 0);
+          subjectName: element, examDate: DateTime(3000), passMark: 40, id: "");
 
       writeToExamClassSubjets(examSubjectModel, examDocID, classDocID);
     });
@@ -154,10 +154,53 @@ class ExamController extends GetxController {
         ExamSubjectModel examDetails = ExamSubjectModel(
             examDate: (doc["exam_date"] as Timestamp).toDate(),
             passMark: doc["pass_mark"],
+            id: doc.id,
             subjectName: doc["subject_name"]);
         examSubjectList.add(examDetails);
         update();
       }
+    });
+  }
+
+  updateExamDate(
+      {required String examdocId,
+      required String classDocId,
+      required String subjectDocId,
+      required DateTime date}) async {
+    FirebaseFirestore.instance
+        .collection(examCollections)
+        .doc(examdocId)
+        .collection(examClassCollections)
+        .doc(classDocId)
+        .collection(examSubjectsCollections)
+        .doc(subjectDocId)
+        .update({'exam_date': date}).then((value) {
+      geteExamClassSubjects(examdocId, classDocId);
+    }).catchError((error) {
+      print("Failed to update user: $error");
+      Get.snackbar("Something went wrong", "",
+          maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
+    });
+  }
+
+  updatePassMark(
+      {required String examdocId,
+      required String classDocId,
+      required String subjectDocId,
+      required String passMark}) async {
+    FirebaseFirestore.instance
+        .collection(examCollections)
+        .doc(examdocId)
+        .collection(examClassCollections)
+        .doc(classDocId)
+        .collection(examSubjectsCollections)
+        .doc(subjectDocId)
+        .update({'pass_mark': int.parse(passMark)}).then((value) {
+      geteExamClassSubjects(examdocId, classDocId);
+    }).catchError((error) {
+      print("Failed to update user: $error");
+      Get.snackbar("Something went wrong", "",
+          maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
     });
   }
 }

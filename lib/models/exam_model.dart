@@ -23,6 +23,7 @@ class ExamModel {
 }
 
 class ExamSubjectModel {
+  String id;
   String subjectName;
   DateTime examDate;
   int passMark;
@@ -30,6 +31,7 @@ class ExamSubjectModel {
   ExamSubjectModel(
       {required this.subjectName,
       required this.examDate,
+      required this.id,
       required this.passMark});
 
   Map<String, dynamic> toJson() {
