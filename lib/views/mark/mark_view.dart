@@ -124,6 +124,7 @@ class _MarkViewState extends State<MarkView> {
                                                   .geteExamClasses(
                                                       value!.docId);
                                               setState(() {
+                                                examDocId = value.docId;
                                                 examName = value;
                                               });
                                             }),
@@ -155,7 +156,7 @@ class _MarkViewState extends State<MarkView> {
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               value: section,
-                                              hint: Text('Class'),
+                                              hint: const Text('Class'),
                                               underline: null,
                                               isExpanded: true,
                                               icon: const Icon(Icons
@@ -165,9 +166,10 @@ class _MarkViewState extends State<MarkView> {
                                               isDense: true,
                                               style: kDropdownTextStyle,
                                               onChanged: ((value) {
-                                                // examManageController
-                                                //     .geteExamClasses(
-                                                //         value!.docId);
+                                                examManageController
+                                                    .geteExamClassSubjects(
+                                                        examDocId,
+                                                        value!.classId);
                                                 setState(() {
                                                   section = value;
                                                 });
@@ -201,19 +203,51 @@ class _MarkViewState extends State<MarkView> {
                                       //     },
                                       //     textStyle: kDropdownTextStyle,
                                       //     decoration: kDropdownDecoration),
-                                      DropDownCommon(
+                                      if (examManageController
+                                          .examSubjectList.isNotEmpty)
+                                        Container(
+                                          height: 50,
                                           width: 330,
-                                          value: subject,
-                                          hintText: Text('Subject'),
-                                          listName: sectionManageController
-                                              .subjectList,
-                                          onChange: (value) {
-                                            setState(() {
-                                              subject = value;
-                                            });
-                                          },
-                                          textStyle: kDropdownTextStyle,
-                                          decoration: kDropdownDecoration),
+                                          decoration: kDropdownDecoration,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, right: 10, top: 10),
+                                            child: DropdownButton<
+                                                ExamSubjectModel>(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              value: subject,
+                                              hint: const Text('Subject'),
+                                              underline: null,
+                                              isExpanded: true,
+                                              icon: const Icon(Icons
+                                                  .keyboard_arrow_down_outlined),
+                                              elevation: 12,
+                                              itemHeight: 50,
+                                              isDense: true,
+                                              style: kDropdownTextStyle,
+                                              onChanged: ((value) {
+                                                setState(() {
+                                                  subject = value;
+                                                });
+                                              }),
+                                              items: examManageController
+                                                  .examSubjectList
+                                                  .map<
+                                                          DropdownMenuItem<
+                                                              ExamSubjectModel>>(
+                                                      (ExamSubjectModel value) {
+                                                return DropdownMenuItem<
+                                                    ExamSubjectModel>(
+                                                  value: value,
+                                                  child:
+                                                      Text(value.subjectName),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ),
+                                        ),
+                                     
                                     ],
                                   ),
                                 ),
