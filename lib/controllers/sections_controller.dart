@@ -70,6 +70,7 @@ class SectionController extends GetxController {
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
         SectionModel sectionModel = SectionModel(
+          id: doc.id,
           classTeacher: doc["class_teacher"],
           section: doc["section"],
           standerd: doc["standerd"],

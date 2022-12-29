@@ -167,8 +167,9 @@ class _StudentManagementViewState extends State<StudentManagementView> {
       source: ImageSource.gallery,
     );
     imagePath = await pickedFile!.readAsBytes();
-    imageName = pickedFile.path;
-    setState(() {});
+    setState(() {
+      // imageName = pickedFile.path.split(".").last;
+    });
     // Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
     // setState(() {
     //   imagePath = bytesFromPicker!;

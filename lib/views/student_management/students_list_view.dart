@@ -511,6 +511,8 @@ class _StudentsListViewState extends State<StudentsListView> {
                                         Container(
                                           width: 150,
                                           child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                             children: [
                                               Container(
                                                 width: 50,
@@ -518,6 +520,9 @@ class _StudentsListViewState extends State<StudentsListView> {
                                                 child: Image.network(
                                                     studentManageController
                                                         .studentsList[i].image),
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
                                               ),
                                               Text(
                                                 studentManageController

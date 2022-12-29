@@ -76,6 +76,7 @@ class StudentManagementController extends GetxController {
             classId: doc["class_id"],
             joinedClass: doc["joined_class"],
             section: doc["section"]);
+           
         studentsList.add(studentModel);
       }
       update();
@@ -88,15 +89,16 @@ class StudentManagementController extends GetxController {
       required String imageName}) async {
     print("::::::::::::::::::::1:::::::::::::::::::");
     final storageReference =
-        FirebaseStorage.instance.ref().child("Students/$studentName");
-    print("::::::::::::::::::::2:::::::::::::::::::");
-    await storageReference.putData(images!);
+        FirebaseStorage.instance.ref().child("Students/$studentName.png");
+    print("::::::::::::::::::::2:::::::::::Students/$studentName.png::::::::");
+    var metadata = SettableMetadata(
+      contentType: 'image/jpeg',
+    );
+    await storageReference.putData(images!, metadata);
     print("::::::::::::::::::::3:::::::::::::::::::");
     final String imageUrl = await storageReference.getDownloadURL();
     return imageUrl;
   }
-
-
 
   Future<String> storeFiles(
       {required Uint8List? file,

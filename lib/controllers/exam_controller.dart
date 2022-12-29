@@ -1,6 +1,8 @@
 import 'package:attandence_admin_panel/constants/colllections_namings.dart';
 import 'package:attandence_admin_panel/models/exam_model.dart';
 import 'package:attandence_admin_panel/models/exam_model_test.dart';
+import 'package:attandence_admin_panel/models/marks_model.dart';
+import 'package:attandence_admin_panel/models/student_model.dart';
 import 'package:attandence_admin_panel/views/exam_view/exam_list_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
@@ -83,6 +85,50 @@ class ExamController extends GetxController {
           backgroundColor: Colors.green);
       // Get.off(() => const ExamListView());
     }).catchError((error) {
+      print(error);
+      Get.snackbar("Something went wrong", "",
+          maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
+    });
+  }
+
+  //write marks for creating the list
+  writeToExamMarks(MarkModel markModel, List<ExamSubjectModel> subjectList,
+      String examDocID, String classDocID) async {
+    CollectionReference users = FirebaseFirestore.instance
+        .collection(examCollections)
+        .doc(examDocID)
+        .collection(examClassCollections)
+        .doc(classDocID)
+        .collection(examMarkCollections);
+
+    users.add(markModel.toJson()).then((value) {
+      for (var i = 0; i < subjectList.length; i++) {
+        MarksSubjectsModel markSubjectModel = MarksSubjectsModel(
+            passMark: subjectList[i].passMark,
+            subjectName: subjectList[i].subjectName,
+            writtenMark: 0);
+        writeToMarksSubjects(markSubjectModel, examDocID, classDocID, value.id);
+      }
+    }).catchError((error) {
+      print(error);
+      Get.snackbar("Something went wrong", "",
+          maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
+    });
+  }
+
+  //write marks for creating the list
+  writeToMarksSubjects(MarksSubjectsModel markSubjectModel, String examDocID,
+      String classDocID, String examMarkID) async {
+    CollectionReference users = FirebaseFirestore.instance
+        .collection(examCollections)
+        .doc(examDocID)
+        .collection(examClassCollections)
+        .doc(classDocID)
+        .collection(examMarkCollections)
+        .doc(examMarkID)
+        .collection(examMarkSunjectCollections);
+
+    users.add(markSubjectModel.toJson()).then((value) {}).catchError((error) {
       print(error);
       Get.snackbar("Something went wrong", "",
           maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
@@ -201,6 +247,25 @@ class ExamController extends GetxController {
       print("Failed to update user: $error");
       Get.snackbar("Something went wrong", "",
           maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
+    });
+  }
+
+  generateStudnetsMarkList(String classId, List<ExamSubjectModel> subjectList,
+      String classDocID, String examDocID) async {
+    FirebaseFirestore.instance
+        .collection(studentsCollection)
+        .where('class_id', isEqualTo: classId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        MarkModel markModel = MarkModel(
+            examID: examDocID,
+            section: doc["joined_class"] + " " + doc["section"],
+            studentId: doc.id,
+            studentName: doc["full_name"]);
+        writeToExamMarks(markModel, subjectList, examDocID, classDocID);
+      }
+      update();
     });
   }
 }
