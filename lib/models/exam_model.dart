@@ -44,15 +44,20 @@ class ExamSubjectModel {
 }
 
 class ExamClassModel {
+  String id;
   String classId;
   String className;
   String section;
 
   ExamClassModel(
-      {required this.classId, required this.className, required this.section});
+      {required this.id,
+      required this.classId,
+      required this.className,
+      required this.section});
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       "class_id": classId,
       "class_name": className,
       "section": section,

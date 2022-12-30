@@ -191,7 +191,9 @@ class _AddClassExamViewState extends State<AddClassExamView> {
                                       .sectionModelList[i].isSelected) {
                                     ExamClassModel examClassModel =
                                         ExamClassModel(
-                                            classId: "",
+                                            id: "",
+                                            classId: sectionManageController
+                                                .sectionModelList[i].id,
                                             className: sectionManageController
                                                 .sectionModelList[i].standerd,
                                             section: sectionManageController

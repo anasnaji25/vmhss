@@ -18,6 +18,8 @@ class ExamController extends GetxController {
 
   List<ExamClassModel> examClassist = [];
 
+  List<MarkModel> markList = [];
+
   writeToExamList(ExamModel examModel) async {
     CollectionReference users =
         FirebaseFirestore.instance.collection(examCollections);
@@ -175,7 +177,8 @@ class ExamController extends GetxController {
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
         ExamClassModel examDetails = ExamClassModel(
-          classId: doc.id,
+          id: doc.id,
+          classId: doc["class_id"],
           className: doc["class_name"],
           section: doc["section"],
         );
@@ -267,6 +270,34 @@ class ExamController extends GetxController {
       }
       update();
     });
+  }
+
+  geteExamMarksList(String classId, List<ExamSubjectModel> subjectList,
+      String classDocID, String examDocID) async {
+    markList.clear();
+    FirebaseFirestore.instance
+        .collection(examCollections)
+        .doc(examDocID)
+        .collection(examClassCollections)
+        .doc(classDocID)
+        .collection(examMarkCollections)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        MarkModel examDetails = MarkModel(
+          studentId: doc.id,
+          examID: doc["exam_id"],
+          studentName: doc["student_name"],
+          section: doc["section"],
+        );
+        markList.add(examDetails);
+        update();
+      }
+    });
+
+    if (markList.isEmpty) {
+      generateStudnetsMarkList(classId, subjectList, classDocID, examDocID);
+    }
   }
 }
 

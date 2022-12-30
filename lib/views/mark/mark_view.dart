@@ -247,13 +247,22 @@ class _MarkViewState extends State<MarkView> {
                                             ),
                                           ),
                                         ),
-                                     
                                     ],
                                   ),
                                 ),
                                 h30,
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    ExamClassModel examclassmodel =
+                                        section as ExamClassModel;
+                                    examManageController
+                                        .generateStudnetsMarkList(
+                                            examclassmodel.classId,
+                                            examManageController
+                                                .examSubjectList,
+                                            examclassmodel.id,
+                                            examDocId);
+                                  },
                                   child: Container(
                                     height: 50,
                                     width: 150,
@@ -343,9 +352,7 @@ class _MarkViewState extends State<MarkView> {
                                   ),
                                 ),
                                 for (int i = 0;
-                                    i <
-                                        studentManageController
-                                            .studentsList.length;
+                                    i < examManageController.markList.length;
                                     i++)
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -387,9 +394,9 @@ class _MarkViewState extends State<MarkView> {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    studentManageController
-                                                        .studentsList[i]
-                                                        .fullName,
+                                                    examManageController
+                                                        .markList[i]
+                                                        .studentName,
                                                     style:
                                                         primaryFonts.copyWith(
                                                             color: Colors.black,
@@ -406,10 +413,7 @@ class _MarkViewState extends State<MarkView> {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    sectionManageController
-                                                        .sectionModelList[i]
-                                                        .subject
-                                                        .toString(),
+                                                    subject.subjectName,
                                                     style:
                                                         primaryFonts.copyWith(
                                                             color: Colors.black,
@@ -428,12 +432,16 @@ class _MarkViewState extends State<MarkView> {
                                                     MainAxisAlignment
                                                         .spaceAround,
                                                 children: [
-                                                  TextFieldCommon(
-                                                      height: 40,
-                                                      width: 200,
-                                                      controller:
-                                                          markController,
-                                                      labelText: 'Mark')
+                                                  Container(
+                                                    height: 40,
+                                                    width: 150,
+                                                    child: TextField(
+                                                      maxLines: 1,
+                                                      decoration: kTextField.copyWith(
+                                                        labelText: "Mark",
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             )
