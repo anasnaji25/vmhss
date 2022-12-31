@@ -45,9 +45,12 @@ class _MarkViewState extends State<MarkView> {
   final sectionManageController = Get.find<SectionController>();
   final examManageController = Get.find<ExamController>();
   var markController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    examManageController.examClassist.clear();
+    examManageController.subjectList.clear();
     studentManageController.getStudents();
     sectionManageController.getSections();
     examManageController.geteExams();
@@ -169,7 +172,7 @@ class _MarkViewState extends State<MarkView> {
                                                 examManageController
                                                     .geteExamClassSubjects(
                                                         examDocId,
-                                                        value!.classId);
+                                                        value!.id);
                                                 setState(() {
                                                   section = value;
                                                 });
@@ -255,13 +258,11 @@ class _MarkViewState extends State<MarkView> {
                                   onTap: () {
                                     ExamClassModel examclassmodel =
                                         section as ExamClassModel;
-                                    examManageController
-                                        .generateStudnetsMarkList(
-                                            examclassmodel.classId,
-                                            examManageController
-                                                .examSubjectList,
-                                            examclassmodel.id,
-                                            examDocId);
+                                    examManageController.geteExamMarksList(
+                                        examclassmodel.classId,
+                                        examManageController.examSubjectList,
+                                        examclassmodel.id,
+                                        examDocId);
                                   },
                                   child: Container(
                                     height: 50,
@@ -437,7 +438,8 @@ class _MarkViewState extends State<MarkView> {
                                                     width: 150,
                                                     child: TextField(
                                                       maxLines: 1,
-                                                      decoration: kTextField.copyWith(
+                                                      decoration:
+                                                          kTextField.copyWith(
                                                         labelText: "Mark",
                                                       ),
                                                     ),

@@ -612,7 +612,7 @@ class _AddClassExamViewState extends State<AddClassExamView> {
                                                                     examController
                                                                         .examClassist[
                                                                             i]
-                                                                        .classId,
+                                                                        .id,
                                                               ));
                                                         },
                                                         child: const Padding(

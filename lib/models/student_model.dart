@@ -123,7 +123,7 @@ class StudentModel {
       "mark_sheet": markSheet,
       "joined_class": joinedClass,
       "section": section,
-      "class_id": classId
+      "class_id": classId.trim()
     };
   }
 }

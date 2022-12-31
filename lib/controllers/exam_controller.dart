@@ -96,13 +96,15 @@ class ExamController extends GetxController {
   //write marks for creating the list
   writeToExamMarks(MarkModel markModel, List<ExamSubjectModel> subjectList,
       String examDocID, String classDocID) async {
+    print(
+        "$examCollections->$examDocID->$examClassCollections->$examMarkCollections");
     CollectionReference users = FirebaseFirestore.instance
         .collection(examCollections)
         .doc(examDocID)
         .collection(examClassCollections)
         .doc(classDocID)
         .collection(examMarkCollections);
-
+  
     users.add(markModel.toJson()).then((value) {
       for (var i = 0; i < subjectList.length; i++) {
         MarksSubjectsModel markSubjectModel = MarksSubjectsModel(
@@ -111,6 +113,8 @@ class ExamController extends GetxController {
             writtenMark: 0);
         writeToMarksSubjects(markSubjectModel, examDocID, classDocID, value.id);
       }
+      geteExamMarksList(
+        "", subjectList, classDocID, examDocID);
     }).catchError((error) {
       print(error);
       Get.snackbar("Something went wrong", "",
@@ -190,7 +194,6 @@ class ExamController extends GetxController {
 
   geteExamClassSubjects(String examdocId, String classDocId) async {
     examSubjectList.clear();
-
     FirebaseFirestore.instance
         .collection(examCollections)
         .doc(examdocId)
@@ -255,11 +258,14 @@ class ExamController extends GetxController {
 
   generateStudnetsMarkList(String classId, List<ExamSubjectModel> subjectList,
       String classDocID, String examDocID) async {
+    print("Class id for student " + classId);
     FirebaseFirestore.instance
         .collection(studentsCollection)
         .where('class_id', isEqualTo: classId)
         .get()
         .then((QuerySnapshot querySnapshot) {
+      print(
+          "............query................${querySnapshot.docs.length}.................");
       for (var doc in querySnapshot.docs) {
         MarkModel markModel = MarkModel(
             examID: examDocID,
@@ -269,6 +275,7 @@ class ExamController extends GetxController {
         writeToExamMarks(markModel, subjectList, examDocID, classDocID);
       }
       update();
+      
     });
   }
 
@@ -294,7 +301,7 @@ class ExamController extends GetxController {
         update();
       }
     });
-
+    print("..............${markList.length}...............");
     if (markList.isEmpty) {
       generateStudnetsMarkList(classId, subjectList, classDocID, examDocID);
     }
