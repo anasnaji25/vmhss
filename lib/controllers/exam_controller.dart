@@ -7,7 +7,9 @@ import 'package:attandence_admin_panel/models/student_model.dart';
 import 'package:attandence_admin_panel/views/exam_view/exam_list_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -109,7 +111,7 @@ class ExamController extends GetxController {
         .collection(examClassCollections)
         .doc(classDocID)
         .collection(examMarkCollections);
-  
+
     users.add(markModel.toJson()).then((value) {
       for (var i = 0; i < subjectList.length; i++) {
         MarksSubjectsModel markSubjectModel = MarksSubjectsModel(
@@ -118,8 +120,7 @@ class ExamController extends GetxController {
             writtenMark: 0);
         writeToMarksSubjects(markSubjectModel, examDocID, classDocID, value.id);
       }
-      geteExamMarksList(
-        "", subjectList, classDocID, examDocID);
+      geteExamMarksList("", subjectList, classDocID, examDocID);
     }).catchError((error) {
       print(error);
       Get.snackbar("Something went wrong", "",
@@ -146,9 +147,12 @@ class ExamController extends GetxController {
     });
   }
 
-
-   updateStudentsMark({required String subject,required int mark,required String examDocID,
-    required  String classDocID,required String examMarkID}) async {
+  updateStudentsMark(
+      {required String subject,
+      required int mark,
+      required String examDocID,
+      required String classDocID,
+      required String examMarkID}) async {
     FirebaseFirestore.instance
         .collection(examCollections)
         .doc(examDocID)
@@ -157,23 +161,28 @@ class ExamController extends GetxController {
         .collection(examMarkCollections)
         .doc(examMarkID)
         .collection(examMarkSunjectCollections)
-        .where("subject_name",isEqualTo: subject).get().then((QuerySnapshot querySnapshot)  {
-          FirebaseFirestore.instance
-        .collection(examCollections)
-        .doc(examDocID)
-        .collection(examClassCollections)
-        .doc(classDocID)
-        .collection(examMarkCollections)
-        .doc(examMarkID)
-        .collection(examMarkSunjectCollections).doc(querySnapshot.docs.first.id).update({
-        "written_mark": mark
-        });
-        });
+        .where("subject_name", isEqualTo: subject)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      FirebaseFirestore.instance
+          .collection(examCollections)
+          .doc(examDocID)
+          .collection(examClassCollections)
+          .doc(classDocID)
+          .collection(examMarkCollections)
+          .doc(examMarkID)
+          .collection(examMarkSunjectCollections)
+          .doc(querySnapshot.docs.first.id)
+          .update({"written_mark": mark});
+    });
   }
 
-Future<String>  getmark({required String subject,required String examDocID,
-    required  String classDocID,required String examMarkID}) async{
- QuerySnapshot querySnapshot =  await FirebaseFirestore.instance
+  Future<String> getmark(
+      {required String subject,
+      required String examDocID,
+      required String classDocID,
+      required String examMarkID}) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection(examCollections)
         .doc(examDocID)
         .collection(examClassCollections)
@@ -181,11 +190,12 @@ Future<String>  getmark({required String subject,required String examDocID,
         .collection(examMarkCollections)
         .doc(examMarkID)
         .collection(examMarkSunjectCollections)
-        .where("subject_name",isEqualTo: subject).get();
+        .where("subject_name", isEqualTo: subject)
+        .get();
 
-        String mark = querySnapshot.docs.first["written_mark"].toString();
+    String mark = querySnapshot.docs.first["written_mark"].toString();
 
-        return mark;
+    return mark;
   }
 
   getSubjects(List<dynamic> subjetcts) {
@@ -322,7 +332,6 @@ Future<String>  getmark({required String subject,required String examDocID,
       }
       update();
     });
-
   }
 
   geteExamMarksList(String classId, List<ExamSubjectModel> subjectList,
@@ -336,9 +345,9 @@ Future<String>  getmark({required String subject,required String examDocID,
         .collection(examMarkCollections)
         .get()
         .then((QuerySnapshot querySnapshot) {
-          if (querySnapshot.docs.isEmpty) {
-           generateStudnetsMarkList(classId, subjectList, classDocID, examDocID);
-         }
+      if (querySnapshot.docs.isEmpty) {
+        generateStudnetsMarkList(classId, subjectList, classDocID, examDocID);
+      }
       for (var doc in querySnapshot.docs) {
         MarkModel examDetails = MarkModel(
           studentId: doc.id,
@@ -352,15 +361,20 @@ Future<String>  getmark({required String subject,required String examDocID,
     });
   }
 
-
-    getwhatssapMessage(String examName,String classId, List<ExamSubjectModel> subjectList,
-      String classDocID, String examDocID) async {
+  getwhatssapMessage(
+      String examName,
+      String classId,
+      List<ExamSubjectModel> subjectList,
+      String classDocID,
+      String examDocID) async {
     // markList.clear();
-      List<MarkModel> markModelList = [];
-      List<MarksSubjectsModel> markSubjectModelList = [];
-      String phoneNumber = "";
-       isLoading(true);
-        FirebaseFirestore.instance
+    List<MarkModel> markModelList = [];
+    List<MarksSubjectsModel> markSubjectModelList = [];
+    String phoneNumber = "";
+    String admissionNumber = "";
+    String joinedclass = "";
+    isLoading(true);
+    FirebaseFirestore.instance
         .collection(examCollections)
         .doc(examDocID)
         .collection(examClassCollections)
@@ -376,206 +390,254 @@ Future<String>  getmark({required String subject,required String examDocID,
           section: doc["section"],
         );
         FirebaseFirestore.instance
-        .collection(studentsCollection)
-        .where('full_name', isEqualTo: examDetails.studentName)
-        .get()
-        .then((QuerySnapshot bquerySnapshot) {
+            .collection(studentsCollection)
+            .where('full_name', isEqualTo: examDetails.studentName)
+            .get()
+            .then((QuerySnapshot bquerySnapshot) {
           for (var bdoc in bquerySnapshot.docs) {
-             phoneNumber = bdoc["mobile_number"];
+            phoneNumber = bdoc["mobile_number"];
+            admissionNumber = bdoc["admission_number"];
+            joinedclass = examDetails.section;
           }
-         });
+        });
         FirebaseFirestore.instance
-        .collection(examCollections)
-        .doc(examDocID)
-        .collection(examClassCollections)
-        .doc(classDocID)
-        .collection(examMarkCollections)
-        .doc(doc.id)
-        .collection(examMarkSunjectCollections).get().then((QuerySnapshot secondquerySnapshot) {
+            .collection(examCollections)
+            .doc(examDocID)
+            .collection(examClassCollections)
+            .doc(classDocID)
+            .collection(examMarkCollections)
+            .doc(doc.id)
+            .collection(examMarkSunjectCollections)
+            .get()
+            .then((QuerySnapshot secondquerySnapshot) {
+          markSubjectModelList.clear();
           for (var doc1 in secondquerySnapshot.docs) {
             print("-------------------${doc1["subject_name"]}---------------");
             print(secondquerySnapshot.docs.length);
             MarksSubjectsModel marksSubjectsModel = MarksSubjectsModel(
-              passMark: doc1["pass_mark"],
-              subjectName:doc1["subject_name"] ,
-              writtenMark:doc1["written_mark"] 
-           );  
-           markSubjectModelList.add(marksSubjectsModel);
-           update();
-          } 
-          Get.find<WhatsappMessageController>().sendWhatsappAsText(name: examDetails.studentName, phone: phoneNumber, examName: examName, mark1: markSubjectModelList.isNotEmpty ? "${markSubjectModelList[0].subjectName} - ${markSubjectModelList[0].writtenMark}": "-", mark2:markSubjectModelList.length > 1?  "${markSubjectModelList[1].subjectName} - ${markSubjectModelList[1].writtenMark}": "-", mark3:markSubjectModelList.length > 3?  "${markSubjectModelList[2].subjectName} - ${markSubjectModelList[2].writtenMark}" : "-", mark4: markSubjectModelList.length > 4 ?  "${markSubjectModelList[3].subjectName} - ${markSubjectModelList[3].writtenMark}" : "-", mark5: markSubjectModelList.length > 5 ?  "${markSubjectModelList[4].subjectName} - ${markSubjectModelList[4].writtenMark}" : "-", mark6:  markSubjectModelList.length > 6 ?  "${markSubjectModelList[5].subjectName} - ${markSubjectModelList[5].writtenMark}" : "-");
-          Get.find<WhatsappMessageController>().sendWhatsappAsPDF(name: examDetails.studentName, phone: phoneNumber, examName: examName,url: "");
-        });
-      
+                passMark: doc1["pass_mark"],
+                subjectName: doc1["subject_name"],
+                writtenMark: doc1["written_mark"]);
+            markSubjectModelList.add(marksSubjectsModel);
 
+            print(markSubjectModelList);
+          }
+          update();
+          Get.find<WhatsappMessageController>().sendWhatsappAsText(
+              name: examDetails.studentName,
+              phone: phoneNumber,
+              examName: examName,
+              mark1: markSubjectModelList.isNotEmpty
+                  ? "${markSubjectModelList[0].subjectName} - ${markSubjectModelList[0].writtenMark}"
+                  : "-",
+              mark2: markSubjectModelList.length > 1
+                  ? "${markSubjectModelList[1].subjectName} - ${markSubjectModelList[1].writtenMark}"
+                  : "-",
+              mark3: markSubjectModelList.length > 3
+                  ? "${markSubjectModelList[2].subjectName} - ${markSubjectModelList[2].writtenMark}"
+                  : "-",
+              mark4: markSubjectModelList.length > 4
+                  ? "${markSubjectModelList[3].subjectName} - ${markSubjectModelList[3].writtenMark}"
+                  : "-",
+              mark5: markSubjectModelList.length > 5
+                  ? "${markSubjectModelList[4].subjectName} - ${markSubjectModelList[4].writtenMark}"
+                  : "-",
+              mark6: markSubjectModelList.length > 6
+                  ? "${markSubjectModelList[5].subjectName} - ${markSubjectModelList[5].writtenMark}"
+                  : "-");
+
+          generatePdfAndSend(
+              name: examDetails.studentName,
+              phone: phoneNumber,
+              markSubjectModelList: markSubjectModelList,
+              admissionNumber: admissionNumber,
+              joinedclass: joinedclass,
+              examName: examName);
+        });
       }
     });
   }
 
 
-  generatePdfAndSend( {required String name,
-    required String phone,
-    required String examName,
-    required String url,}) async{
-
-
-      final pdf = pw.Document();
-
-  pdf.addPage(pw.Page(
-      pageFormat: PdfPageFormat.a4,
-      build: (pw.Context context) {
-        return pw.Column(
-          
-          crossAxisAlignment: pw.CrossAxisAlignment.center,
-          children: [
-             pw.SizedBox(
-              height: 20,
-            ),
-
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.center,
-              children: [
-                pw.Text("Vedhathri Maharishi Hr Sec School".toUpperCase(),style:  pw.TextStyle(
-                  fontWeight: pw.FontWeight.bold,
-                  fontSize: 15
-                ),)
-
-              ],
-            ),
-            pw.Divider(),
-             pw. SizedBox(
-              height: 20,
-            ),
-            pw.Padding(
-              padding: pw.EdgeInsets.only(left: 20,right: 20),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Row(
-                    children:  [
-                      pw.Text("Result of: ",style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold
-                      ),),
-                      pw.Text("Anual Exam",style: pw.TextStyle(
-                        
-                      ),),
-                    ],
-                  ),
-                  pw.Row(
-                    children:  [
-                     pw. Text("Class: ",style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold
-                      ),),
-                      pw.Text("LKG A",style: pw.TextStyle(
-                        
-                      ),),
-                    ],
-                  )
-
-                ],
-              ),
-            ),
-            pw. SizedBox(
-              height: 10,
-            ),
-            pw.Padding(
-              padding: pw. EdgeInsets.only(left: 20,right: 20),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  
-                  pw.Row(
-                    children:  [
-                      pw.Text("Name: ",style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold
-                      ),),
-                      pw.Text("Anas N",style: pw.TextStyle(
-                       
-                      ),),
-                    ],
-                  ),
-                 pw. Row(
-                    children: [
-                      pw.Text("Admission No: ",style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold
-                      ),),
-                      pw.Text("ABCSA131",style: pw.TextStyle(
-                     
-                      ),),
-                    ],
-                  ),
-
-                ],
-              ),
-            ),
-           pw.SizedBox(
-              height: 20,
-            ),
-            pw.Container(
-        color: PdfColor(255, 255, 255),
-        padding: pw. EdgeInsets.all(20.0),
-        child: pw.Table(
-          border: pw.TableBorder.all(color: PdfColor(0, 0, 0)),
-          
-          children: [
-            pw.TableRow(
-              
-              children: [
-              pw.Center(child: pw.Padding(
-                padding: pw. EdgeInsets.all(5.0),
-                child: pw.Text('Subject',style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
-              )),
-              pw.Center(child: pw.Padding(
-                padding: pw. EdgeInsets.all(5.0),
-                child: pw.Text('Pass Mark',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              )),
-              pw.Center(child: pw.Padding(
-                padding: pw. EdgeInsets.all(5.0),
-                child: pw.Text('Written Mark',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              )),
-            ]),
-            pw.TableRow(children: [
-              pw.Center(child: pw.Padding(
-                padding: pw. EdgeInsets.all(3.0),
-                child: pw.Text('Cell 4'),
-              )),
-              pw.Center(child: pw.Padding(
-                padding: pw. EdgeInsets.all(3.0),
-                child: pw.Text('Cell 4'),
-              )),
-             pw.Center(child:pw.Padding(
-                padding: pw. EdgeInsets.all(3.0),
-                child: pw.Text('Cell 4'),
-              )),
-            ]),
-           
-          ],
-        ),
-      )
-
-           
-            
-          ],
-        ) ;// Center
-      })); // Page
-
-
-
-var bytes = await pdf.save();
-
-  
-
-  
-
-
+  sendWahtsappText() async{
+    
   }
 
+  generatePdfAndSend({
+    required String name,
+    required String phone,
+    required String examName,
+    required String admissionNumber,
+    required String joinedclass,
+    required List<MarksSubjectsModel> markSubjectModelList,
+  }) async {
+    final pdf = pw.Document();
 
+    pdf.addPage(pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            children: [
+              pw.SizedBox(
+                height: 20,
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.center,
+                children: [
+                  pw.Text(
+                    "Vedhathri Maharishi Hr Sec School".toUpperCase(),
+                    style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold, fontSize: 15),
+                  )
+                ],
+              ),
+              pw.Divider(),
+              pw.SizedBox(
+                height: 20,
+              ),
+              pw.Padding(
+                padding: pw.EdgeInsets.only(left: 20, right: 20),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Row(
+                      children: [
+                        pw.Text(
+                          "Result of: ",
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                        pw.Text(
+                          examName,
+                          style: pw.TextStyle(),
+                        ),
+                      ],
+                    ),
+                    pw.Row(
+                      children: [
+                        pw.Text(
+                          "Class: ",
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                        pw.Text(
+                          joinedclass,
+                          style: pw.TextStyle(),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              pw.SizedBox(
+                height: 10,
+              ),
+              pw.Padding(
+                padding: pw.EdgeInsets.only(left: 20, right: 20),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Row(
+                      children: [
+                        pw.Text(
+                          "Name: ",
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                        pw.Text(
+                          name,
+                          style: pw.TextStyle(),
+                        ),
+                      ],
+                    ),
+                    pw.Row(
+                      children: [
+                        pw.Text(
+                          "Admission No: ",
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                        pw.Text(
+                          admissionNumber,
+                          style: pw.TextStyle(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              pw.SizedBox(
+                height: 20,
+              ),
+              pw.Container(
+                color: PdfColors.white,
+                padding: pw.EdgeInsets.all(20.0),
+                child: pw.Table(
+                  border: pw.TableBorder.all(color: PdfColors.black),
+                  children: [
+                    pw.TableRow(children: [
+                      pw.Center(
+                          child: pw.Padding(
+                        padding: pw.EdgeInsets.all(5.0),
+                        child: pw.Text(
+                          'Subject',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      )),
+                      pw.Center(
+                          child: pw.Padding(
+                        padding: pw.EdgeInsets.all(5.0),
+                        child: pw.Text('Pass Mark',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      )),
+                      pw.Center(
+                          child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(5.0),
+                        child: pw.Text('Written Mark',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      )),
+                    ]),
+                    for (int i = 0; i < markSubjectModelList.length; i++)
+                      pw.TableRow(children: [
+                        pw.Center(
+                            child: pw.Padding(
+                          padding: pw.EdgeInsets.all(3.0),
+                          child: pw.Text(markSubjectModelList[i].subjectName),
+                        )),
+                        pw.Center(
+                            child: pw.Padding(
+                          padding: pw.EdgeInsets.all(3.0),
+                          child: pw.Text(
+                              markSubjectModelList[i].passMark.toString()),
+                        )),
+                        pw.Center(
+                            child: pw.Padding(
+                          padding: pw.EdgeInsets.all(3.0),
+                          child: pw.Text(
+                              markSubjectModelList[i].writtenMark.toString()),
+                        )),
+                      ]),
+                  ],
+                ),
+              )
+            ],
+          ); // Center
+        })); // Page
 
+    var bytes = await pdf.save();
 
+    String pdfUrl = await storePdf(
+        images: bytes, studentName: "$name${DateTime.now().toIso8601String()}");
 
-    sendMarkSheet({required String subject,required int mark,required String examDocID,
-    required  String classDocID,required String examMarkID}) async {
+    Get.find<WhatsappMessageController>().sendWhatsappAsPDF(
+        name: name, phone: phone, examName: examName, url: pdfUrl);
+  }
+
+  sendMarkSheet(
+      {required String subject,
+      required int mark,
+      required String examDocID,
+      required String classDocID,
+      required String examMarkID}) async {
     FirebaseFirestore.instance
         .collection(examCollections)
         .doc(examDocID)
@@ -584,25 +646,37 @@ var bytes = await pdf.save();
         .collection(examMarkCollections)
         .doc(examMarkID)
         .collection(examMarkSunjectCollections)
-        .where("subject_name",isEqualTo: subject).get().then((QuerySnapshot querySnapshot)  {
-          FirebaseFirestore.instance
-        .collection(examCollections)
-        .doc(examDocID)
-        .collection(examClassCollections)
-        .doc(classDocID)
-        .collection(examMarkCollections)
-        .doc(examMarkID)
-        .collection(examMarkSunjectCollections).doc(querySnapshot.docs.first.id).update({
-        "written_mark": mark
-        });
-        });
+        .where("subject_name", isEqualTo: subject)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      FirebaseFirestore.instance
+          .collection(examCollections)
+          .doc(examDocID)
+          .collection(examClassCollections)
+          .doc(classDocID)
+          .collection(examMarkCollections)
+          .doc(examMarkID)
+          .collection(examMarkSunjectCollections)
+          .doc(querySnapshot.docs.first.id)
+          .update({"written_mark": mark});
+    });
   }
 
-  
-
-
-
-} 
+  Future<String> storePdf({
+    required Uint8List? images,
+    required String studentName,
+  }) async {
+    print("::::::::::::::::::::1:::::::::::::::::::");
+    final storageReference =
+        FirebaseStorage.instance.ref().child("Pdf/$studentName.pdf");
+    print("::::::::::::::::::::2:::::::::::Pdf/$studentName.pdf::::::::");
+    var metadata = SettableMetadata(contentType: "application/pdf");
+    await storageReference.putData(images!, metadata);
+    print("::::::::::::::::::::3:::::::::::::::::::");
+    final String imageUrl = await storageReference.getDownloadURL();
+    return imageUrl;
+  }
+}
 
 //  classId: doc["class_id"],
 //           className: doc["class_name"],

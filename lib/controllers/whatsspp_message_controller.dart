@@ -152,7 +152,7 @@ class WhatsappMessageController extends GetxController {
               {
         "type": "document",
         "document": {
-          "link": "https://firebasestorage.googleapis.com/v0/b/vmhsschool-88969.appspot.com/o/report.pdf?alt=media&token=b3667cb7-476c-455d-8b96-c082bc0213ba",
+          "link": url,
           "filename": "Mark Sheet"
         }
         },]
