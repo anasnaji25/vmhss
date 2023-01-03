@@ -1,4 +1,5 @@
 import 'package:attandence_admin_panel/views/event_handling/event_handling_view.dart';
+import 'package:attandence_admin_panel/views/whatssap_messaging/whatssap_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +20,7 @@ class RightBar extends StatelessWidget {
             height: 10,
           ),
           IconBox(icon: Icons.sms_outlined, text: 'SMS', onPress: () {
-             Get.to(()=> EventManagetView());
+             Get.to(()=> const WhatsAppMessageView());
           }),
           h20,
           IconBox(

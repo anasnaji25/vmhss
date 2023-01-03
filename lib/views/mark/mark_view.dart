@@ -1,13 +1,11 @@
 import 'package:attandence_admin_panel/constants/app_fonts.dart';
+import 'package:attandence_admin_panel/constants/app_styles.dart';
 import 'package:attandence_admin_panel/controllers/exam_controller.dart';
 import 'package:attandence_admin_panel/controllers/sections_controller.dart';
-import 'package:attandence_admin_panel/controllers/staff_management_controller.dart';
 import 'package:attandence_admin_panel/controllers/student_management_controller.dart';
 import 'package:attandence_admin_panel/models/exam_model.dart';
-import 'package:attandence_admin_panel/views/staff_management/staff_management.dart';
 import 'package:attandence_admin_panel/widgets/common_widgets/left_bar.dart';
 import 'package:attandence_admin_panel/widgets/common_widgets/right_bar.dart';
-import 'package:attandence_admin_panel/widgets/common_widgets/textFieldCommon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -16,7 +14,6 @@ import '../../constants/app_colors.dart';
 import '../../constants/decoration.dart';
 import '../../constants/helper_widgets.dart';
 import '../../widgets/common_widgets/common_app_bar.dart';
-import '../../widgets/common_widgets/dropdown_common.dart';
 
 class MarkView extends StatefulWidget {
   const MarkView({super.key});
@@ -51,6 +48,7 @@ class _MarkViewState extends State<MarkView> {
     super.initState();
     examManageController.examClassist.clear();
     examManageController.subjectList.clear();
+    examManageController.markList.clear();
     studentManageController.getStudents();
     sectionManageController.getSections();
     examManageController.geteExams();
@@ -123,6 +121,9 @@ class _MarkViewState extends State<MarkView> {
                                             isDense: true,
                                             style: kDropdownTextStyle,
                                             onChanged: ((value) {
+                                              examManageController.examClassist.clear(); 
+                                              examManageController.markList.clear(); 
+                                          examManageController.update();
                                               examManageController
                                                   .geteExamClasses(
                                                       value!.docId);
@@ -169,7 +170,11 @@ class _MarkViewState extends State<MarkView> {
                                               isDense: true,
                                               style: kDropdownTextStyle,
                                               onChanged: ((value) {
-                                                examManageController
+                                                     examManageController.examSubjectList.clear(); 
+                                                     examManageController.markList.clear();
+                                                     subject = null;
+                                                     examManageController.update();
+                                                     examManageController
                                                     .geteExamClassSubjects(
                                                         examDocId,
                                                         value!.id);
@@ -240,8 +245,7 @@ class _MarkViewState extends State<MarkView> {
                                                           DropdownMenuItem<
                                                               ExamSubjectModel>>(
                                                       (ExamSubjectModel value) {
-                                                return DropdownMenuItem<
-                                                    ExamSubjectModel>(
+                                                return DropdownMenuItem<ExamSubjectModel>(
                                                   value: value,
                                                   child:
                                                       Text(value.subjectName),
@@ -256,6 +260,9 @@ class _MarkViewState extends State<MarkView> {
                                 h30,
                                 InkWell(
                                   onTap: () {
+                                    examManageController.markList.clear();
+                                    examManageController.update();
+                                    
                                     ExamClassModel examclassmodel =
                                         section as ExamClassModel;
                                     examManageController.geteExamMarksList(
@@ -433,16 +440,32 @@ class _MarkViewState extends State<MarkView> {
                                                     MainAxisAlignment
                                                         .spaceAround,
                                                 children: [
-                                                  Container(
-                                                    height: 40,
-                                                    width: 150,
-                                                    child: TextField(
-                                                      maxLines: 1,
-                                                      decoration:
-                                                          kTextField.copyWith(
-                                                        labelText: "Mark",
-                                                      ),
-                                                    ),
+                                                  FutureBuilder<String>(
+                                                    future: examManageController.getmark(subject: subject.subjectName,examDocID:  examDocId, classDocID: section.id, examMarkID: examManageController
+                                                            .markList[i].studentId),
+                                                    builder: (context, snapshot) {
+                                                      return Container(
+                                                        height: 40,
+                                                        width: 150,
+                                                        child: snapshot.data == "0" ? TextField(
+                                                          maxLines: 1,
+                                                          onChanged: (value) {
+                                                            int mark = int.parse(value);
+                                                            ExamClassModel examclassmodel =  section as ExamClassModel;
+                                                            examManageController.updateStudentsMark(subject: subject.subjectName, mark: mark, examDocID:  examDocId, classDocID: examclassmodel.id, examMarkID: examManageController
+                                                            .markList[i].studentId);
+                                                          },
+                                                          decoration:InputDecoration(
+                                                          contentPadding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                                                          hintText: snapshot.data,
+                                                          enabledBorder: borderstyle,
+                                                          focusedBorder: borderstyle),
+                                                        ) : Text(snapshot.data.toString(),style: primaryFonts.copyWith(
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.w600
+                                                        ),),
+                                                      );
+                                                    }
                                                   ),
                                                 ],
                                               ),

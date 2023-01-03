@@ -19,7 +19,7 @@ PreferredSize customAppBar() {
       ),
       title: Text(
         'Vedhathri Maharishi Hr Sec School'.toUpperCase(),
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       leadingWidth: 100,
       centerTitle: true,
