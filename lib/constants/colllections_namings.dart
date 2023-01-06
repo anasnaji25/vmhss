@@ -6,3 +6,4 @@ const String examClassCollections = "examsClasses";
 const String examSubjectsCollections = "examSubjects";
 const String examMarkCollections = "examMark";
 const String examMarkSunjectCollections = "examMarkSubjects";
+const String attendenceCollection = "attendenceCollection";

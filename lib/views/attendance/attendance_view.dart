@@ -1,7 +1,9 @@
 import 'package:attandence_admin_panel/constants/app_fonts.dart';
+import 'package:attandence_admin_panel/controllers/attendence_controller.dart';
 import 'package:attandence_admin_panel/controllers/sections_controller.dart';
 import 'package:attandence_admin_panel/controllers/staff_management_controller.dart';
 import 'package:attandence_admin_panel/controllers/student_management_controller.dart';
+import 'package:attandence_admin_panel/models/section_model.dart';
 import 'package:attandence_admin_panel/views/staff_management/staff_management.dart';
 import 'package:attandence_admin_panel/widgets/common_widgets/dropdown_common.dart';
 import 'package:attandence_admin_panel/widgets/common_widgets/left_bar.dart';
@@ -14,6 +16,7 @@ import '../../constants/app_colors.dart';
 import '../../constants/decoration.dart';
 import '../../constants/helper_widgets.dart';
 import '../../widgets/common_widgets/common_app_bar.dart';
+
 enum radioBtnChoice { Present, Absent }
 
 class AttendanceView extends StatefulWidget {
@@ -24,6 +27,8 @@ class AttendanceView extends StatefulWidget {
 }
 
 class _AttendanceViewState extends State<AttendanceView> {
+  final attendanceController = Get.find<AttendenceController>();
+
   String _radioVal = '';
   int? _radioSelected;
   var studentStaff;
@@ -31,6 +36,9 @@ class _AttendanceViewState extends State<AttendanceView> {
   var staff;
   var section;
   var session;
+
+  bool isAllPresent = true;
+  bool isAllabsent = false;
 
   List<String> studentStaffList = ["Student", "Staff"];
   List<String> sessionList = ["FN", "AN"];
@@ -48,12 +56,11 @@ class _AttendanceViewState extends State<AttendanceView> {
   ];
 
   final studentManageController = Get.find<StudentManagementController>();
-  final sectionManageController = Get.find<SectionController>();
   @override
   void initState() {
     super.initState();
     studentManageController.getStudents();
-    sectionManageController.getSections();
+    attendanceController.getSections();
   }
 
   @override
@@ -67,7 +74,7 @@ class _AttendanceViewState extends State<AttendanceView> {
           children: [
             const LeftBar(),
             Expanded(
-              child: GetBuilder<StudentManagementController>(builder: (_) {
+              child: GetBuilder<AttendenceController>(builder: (_) {
                 return Container(
                   decoration: BoxDecoration(color: HexColor('#e3f2fd')),
                   height: size.height,
@@ -106,7 +113,7 @@ class _AttendanceViewState extends State<AttendanceView> {
                                       DropDownCommon(
                                           width: 330,
                                           value: studentStaff,
-                                          hintText: Text('Select'),
+                                          hintText: const Text('Select'),
                                           listName: studentStaffList,
                                           onChange: (value) {
                                             setState(() {
@@ -116,23 +123,53 @@ class _AttendanceViewState extends State<AttendanceView> {
                                           textStyle: kDropdownTextStyle,
                                           decoration: kDropdownDecoration),
                                       if (studentStaff == 'Student') ...[
-                                        DropDownCommon(
-                                            width: 330,
-                                            value: section,
-                                            hintText: Text('Class'),
-                                            listName: sectionList,
-                                            onChange: (value) {
-                                              setState(() {
-                                                section = value;
-                                              });
-                                            },
-                                            textStyle: kDropdownTextStyle,
-                                            decoration: kDropdownDecoration),
+                                        Container(
+                                          height: 50,
+                                          width: 330,
+                                          decoration: kDropdownDecoration,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, right: 10, top: 10),
+                                            child: DropdownButton<SectionModel>(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              value: section,
+                                              hint: const Text('Class'),
+                                              underline: null,
+                                              isExpanded: true,
+                                              icon: const Icon(Icons
+                                                  .keyboard_arrow_down_outlined),
+                                              elevation: 12,
+                                              itemHeight: 50,
+                                              isDense: true,
+                                              style: kDropdownTextStyle,
+                                              onChanged: ((value) {
+                                                setState(() {
+                                                  section = value;
+                                                });
+                                              }),
+                                              items: attendanceController
+                                                  .sectionModelList
+                                                  .map<
+                                                          DropdownMenuItem<
+                                                              SectionModel>>(
+                                                      (SectionModel value) {
+                                                return DropdownMenuItem<
+                                                    SectionModel>(
+                                                  value: value,
+                                                  child: Text(
+                                                      "${value.standerd} ${value.section}"),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ),
+                                        ),
                                       ] else if (studentStaff == 'Staff') ...[
                                         DropDownCommon(
                                             width: 330,
                                             value: staff,
-                                            hintText: Text('Select Staff'),
+                                            hintText:
+                                                const Text('Select Staff'),
                                             listName: staffList,
                                             onChange: (value) {
                                               setState(() {
@@ -145,7 +182,7 @@ class _AttendanceViewState extends State<AttendanceView> {
                                       DropDownCommon(
                                           width: 330,
                                           value: session,
-                                          hintText: Text('Session'),
+                                          hintText: const Text('Session'),
                                           listName: sessionList,
                                           onChange: (value) {
                                             setState(() {
@@ -159,7 +196,14 @@ class _AttendanceViewState extends State<AttendanceView> {
                                 ),
                                 h30,
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    if (studentStaff == 'Student') {
+                                      SectionModel sectionModel =
+                                          section as SectionModel;
+                                      attendanceController.getAttendenceList(
+                                          sectionModel.id, session, 1);
+                                    } else {}
+                                  },
                                   child: Container(
                                     height: 50,
                                     width: 150,
@@ -226,12 +270,55 @@ class _AttendanceViewState extends State<AttendanceView> {
                                         Container(
                                           width: 400,
                                           alignment: Alignment.center,
-                                          child: Text(
-                                            "Actions",
-                                            style: primaryFonts.copyWith(
-                                                color: Colors.black,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Actions -",
+                                                style: primaryFonts.copyWith(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                "Present All",
+                                                style: primaryFonts.copyWith(),
+                                              ),
+                                              const SizedBox(
+                                                width: 2,
+                                              ),
+                                              Checkbox(
+                                                  value: isAllPresent,
+                                                  onChanged: (val) {
+                                                    setState(() {
+                                                      isAllPresent =
+                                                          !isAllPresent;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                "Absent All",
+                                                style: primaryFonts.copyWith(),
+                                              ),
+                                              const SizedBox(
+                                                width: 2,
+                                              ),
+                                              Checkbox(
+                                                  value: !isAllPresent,
+                                                  onChanged: (val) {
+                                                    setState(() {
+                                                      isAllPresent =
+                                                          !isAllPresent;
+                                                    });
+                                                  })
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -240,8 +327,8 @@ class _AttendanceViewState extends State<AttendanceView> {
                                 ),
                                 for (int i = 0;
                                     i <
-                                        studentManageController
-                                            .studentsList.length;
+                                        attendanceController
+                                            .attendenceList.length;
                                     i++)
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -283,9 +370,8 @@ class _AttendanceViewState extends State<AttendanceView> {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    studentManageController
-                                                        .studentsList[i]
-                                                        .fullName,
+                                                    attendanceController
+                                                        .attendenceList[i].name,
                                                     style:
                                                         primaryFonts.copyWith(
                                                             color: Colors.black,
@@ -318,18 +404,18 @@ class _AttendanceViewState extends State<AttendanceView> {
                                                                         .w500),
                                                       ),
                                                       w20,
-                                                      Radio(
-                                                          value: 1,
-                                                          groupValue:
-                                                              _radioSelected,
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              _radioSelected =
-                                                                  value as int?;
-                                                              _radioVal =
-                                                                  'Present In';
-                                                            });
-                                                          })
+                                                      Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .grey)),
+                                                      )
                                                     ],
                                                   ),
                                                   Row(

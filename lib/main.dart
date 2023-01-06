@@ -1,3 +1,4 @@
+import 'package:attandence_admin_panel/controllers/attendence_controller.dart';
 import 'package:attandence_admin_panel/controllers/exam_controller.dart';
 import 'package:attandence_admin_panel/controllers/whatsspp_message_controller.dart';
 import 'package:attandence_admin_panel/views/sign_in_view/spash_screen.dart';
@@ -24,6 +25,7 @@ void main() async {
   Get.put(StudentManagementController());
   Get.put(WhatsappMessageController());
   Get.put(ExamController());
+  Get.put(AttendenceController());
   runApp(const MyApp());
 }
 
