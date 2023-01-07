@@ -37,7 +37,7 @@ class _AttendanceViewState extends State<AttendanceView> {
   var section;
   var session;
 
-  bool isAllPresent = true;
+  int isAllPresent = 0;
   bool isAllabsent = false;
 
   List<String> studentStaffList = ["Student", "Staff"];
@@ -292,16 +292,38 @@ class _AttendanceViewState extends State<AttendanceView> {
                                               const SizedBox(
                                                 width: 2,
                                               ),
-                                              Checkbox(
-                                                  value: isAllPresent,
-                                                  onChanged: (val) {
-                                                    setState(() {
-                                                      isAllPresent =
-                                                          !isAllPresent;
-                                                    });
-                                                  }),
+                                             InkWell(
+                                              onTap: (){
+                                                setState(() {
+                                                isAllPresent = 0;
+                                              });
+                                              },
+                                                child: Container(
+                                                            height: 20,
+                                                            width: 20,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey)),
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.all(2.0),
+                                                                          child:  isAllPresent == 0 ? Container(
+                                                                           
+                                                                            decoration: BoxDecoration(
+                                                                               color: Colors.green,
+                                                                              borderRadius: BorderRadius.circular(15)
+                                                                            ),
+                                                                          ): Container(),
+                                                                        ),
+                                               ),
+                                              ),
+                                              
                                               const SizedBox(
-                                                width: 10,
+                                                width: 25,
                                               ),
                                               Text(
                                                 "Absent All",
@@ -310,14 +332,35 @@ class _AttendanceViewState extends State<AttendanceView> {
                                               const SizedBox(
                                                 width: 2,
                                               ),
-                                              Checkbox(
-                                                  value: !isAllPresent,
-                                                  onChanged: (val) {
-                                                    setState(() {
-                                                      isAllPresent =
-                                                          !isAllPresent;
-                                                    });
-                                                  })
+                                             InkWell(
+                                              onTap: (){
+                                                setState(() {
+                                                isAllPresent = 1;
+                                              });
+                                              },
+                                               child: Container(
+                                                            height: 20,
+                                                            width: 20,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey)),
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.all(2.0),
+                                                                          child:  isAllPresent == 1 ? Container(
+                                                                           
+                                                                            decoration: BoxDecoration(
+                                                                               color: Colors.red,
+                                                                              borderRadius: BorderRadius.circular(15)
+                                                                            ),
+                                                                          ): Container(),
+                                                                        ),
+                                                          ),
+                                             ),
                                             ],
                                           ),
                                         ),
@@ -404,17 +447,42 @@ class _AttendanceViewState extends State<AttendanceView> {
                                                                         .w500),
                                                       ),
                                                       w20,
-                                                      Container(
-                                                        height: 20,
-                                                        width: 20,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .grey)),
+                                                     InkWell(
+                                                        onTap: (){
+                                                           attendanceController
+                                                          .attendenceList[i].isPresent = true;
+                                                          attendanceController
+                                                          .markAttendence(docId: attendanceController
+                                                          .attendenceList[i].id, isPresent: true);
+                                                          setState(() {
+                                                            isAllPresent = 3;
+                                                          });
+                                                          attendanceController
+                                                          .update();
+                                                        },
+                                                        child: Container(
+                                                          height: 20,
+                                                          width: 20,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey)),
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.all(2.0),
+                                                                        child:  attendanceController
+                                                          .attendenceList[i].isPresent ? Container(
+                                                                         
+                                                                          decoration: BoxDecoration(
+                                                                             color: Colors.green,
+                                                                            borderRadius: BorderRadius.circular(15)
+                                                                          ),
+                                                                        ): Container(),
+                                                                      ),
+                                                        ),
                                                       )
                                                     ],
                                                   ),
@@ -435,18 +503,44 @@ class _AttendanceViewState extends State<AttendanceView> {
                                                                         .w500),
                                                       ),
                                                       w20,
-                                                      Radio(
-                                                          value: 2,
-                                                          groupValue:
-                                                              _radioSelected,
-                                                          onChanged: (value) {
+                                                       InkWell(
+                                                        onTap: (){
+                                                           attendanceController
+                                                          .attendenceList[i].isPresent = false;
+
+                                                            attendanceController
+                                                          .markAttendence(docId: attendanceController
+                                                          .attendenceList[i].id, isPresent: false);
                                                             setState(() {
-                                                              _radioSelected =
-                                                                  value as int?;
-                                                              _radioVal =
-                                                                  'Absent';
-                                                            });
-                                                          })
+                                                            isAllPresent = 3;
+                                                          });
+                                                          attendanceController
+                                                          .update();
+                                                        },
+                                                         child: Container(
+                                                          height: 20,
+                                                          width: 20,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey)),
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.all(2.0),
+                                                                        child:  attendanceController
+                                                          .attendenceList[i].isPresent == false ? Container(
+                                                                         
+                                                                          decoration: BoxDecoration(
+                                                                             color: Colors.red,
+                                                                            borderRadius: BorderRadius.circular(15)
+                                                                          ),
+                                                                        ): Container(),
+                                                                      ),
+                                                                                                             ),
+                                                       )
                                                     ],
                                                   ),
                                                 ],

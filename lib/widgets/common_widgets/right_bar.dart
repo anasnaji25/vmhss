@@ -20,6 +20,10 @@ class RightBar extends StatelessWidget {
             height: 10,
           ),
           IconBox(icon: Icons.sms_outlined, text: 'SMS', onPress: () {
+            //  Get.to(()=> const Sm());
+          }),
+          h20,
+          IconBox(icon: Icons.whatsapp, text: 'Whatsapp', onPress: () {
              Get.to(()=> const WhatsAppMessageView());
           }),
           h20,

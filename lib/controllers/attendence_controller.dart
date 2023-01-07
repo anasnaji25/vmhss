@@ -44,7 +44,7 @@ class AttendenceController extends GetxController {
       }
       for (var doc in querySnapshot.docs) {
         AttendenceModel tAttendenceModel = AttendenceModel(
-            id: doc['id'],
+            id: doc.id,
             docId: doc['doc_id'],
             name: doc['name'],
             sections: doc['sections'],
@@ -113,5 +113,8 @@ class AttendenceController extends GetxController {
       }
       update();
     });
-  }
+  }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+
+  
 }
