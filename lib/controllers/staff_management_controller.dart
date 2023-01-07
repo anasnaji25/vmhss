@@ -34,8 +34,8 @@ class StaffManagementController extends GetxController {
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
-        print(doc["full_name"]);
         StaffModel staffDetail = StaffModel(
+          id: doc.id,
           image: doc["full_name"],
           fullName: doc["full_name"],
           mobileNumber: doc["mobile_number"],

@@ -1,6 +1,8 @@
 import 'package:attandence_admin_panel/constants/colllections_namings.dart';
+import 'package:attandence_admin_panel/controllers/staff_management_controller.dart';
 import 'package:attandence_admin_panel/models/attendence_model.dart';
 import 'package:attandence_admin_panel/models/section_model.dart';
+import 'package:attandence_admin_panel/models/staff_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,8 @@ class AttendenceController extends GetxController {
       if (querySnapshot.docs.isEmpty) {
         if (staffOrStudent == 1) {
           generateStudnetsAttendance(classId, session);
+        } else {
+          generateStaffAttendence(classId, session);
         }
       }
       for (var doc in querySnapshot.docs) {
@@ -55,6 +59,25 @@ class AttendenceController extends GetxController {
         update();
       }
     });
+  }
+
+  generateStaffAttendence(String classId, String session) async {
+    List<StaffModel> staffsList =
+        Get.find<StaffManagementController>().staffList;
+
+    for (var value in staffsList) {
+      if (value.designation == classId) {
+        AttendenceModel attendenceModel = AttendenceModel(
+            id: "",
+            docId: value.id,
+            commonId: classId,
+            name: value.fullName,
+            sections: session,
+            date: formatDate(DateTime.now(), [dd, "-", mm, "-", yyyy]),
+            isPresent: true);
+        writeToAttendenceList(attendenceModel);
+      }
+    }
   }
 
   markAttendence({required String docId, required bool isPresent}) async {
@@ -111,10 +134,20 @@ class AttendenceController extends GetxController {
             isPresent: true);
         writeToAttendenceList(attendenceModel);
       }
+      getAttendenceList( classId,  session, 1);
       update();
     });
-  }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  }
 
+  markAllAsPresent() async {
+    for (var value in attendenceList) {
+      markAttendence(docId: value.id, isPresent: true);
+    }
+  }
 
-  
+  markAllAsAbsent() async {
+    for (var value in attendenceList) {
+      markAttendence(docId: value.id, isPresent: false);
+    }
+  }
 }

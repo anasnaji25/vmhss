@@ -1,5 +1,6 @@
 import 'package:attandence_admin_panel/views/attendance/attendance_view.dart';
 import 'package:attandence_admin_panel/views/dash_board_view/home_page_view.dart';
+import 'package:attandence_admin_panel/views/data_import_view/data_import_view.dart';
 import 'package:attandence_admin_panel/views/exam_view/exam_list_view.dart';
 import 'package:attandence_admin_panel/views/mark/mark_view.dart';
 import 'package:attandence_admin_panel/views/sections_view/section_view.dart';
@@ -56,7 +57,9 @@ class LeftBar extends StatelessWidget {
             //   onPress: () {
             //   Get.to(() => const HomePageView());
             // },
-            onPress: () {},
+            onPress: () {
+              Get.to(() => DataImportView());
+            },
           ),
 
           h20,
@@ -128,7 +131,7 @@ class LeftBar extends StatelessWidget {
             //   Get.to(() => const HomePageView());
             // },
             onPress: () {
-              Get.to(()=> MarkView());
+              Get.to(() => MarkView());
             },
           ),
 
