@@ -1,5 +1,5 @@
-
 class StaffModel {
+  String id;
   String image;
   String fullName;
   String mobileNumber;
@@ -17,7 +17,8 @@ class StaffModel {
   String aadharCardImage;
   String panCardImage;
 
- StaffModel({
+  StaffModel({
+    this.id = "",
     required this.image,
     required this.fullName,
     required this.mobileNumber,
@@ -34,10 +35,10 @@ class StaffModel {
     required this.panCardNumber,
     required this.aadharCardImage,
     required this.panCardImage,
-});
+  });
 
-Map<String, dynamic> toJson() {
-  return {
+  Map<String, dynamic> toJson() {
+    return {
       "image": image,
       "full_name": fullName,
       "mobile_number": mobileNumber,
@@ -56,7 +57,4 @@ Map<String, dynamic> toJson() {
       "pan_card_image": panCardImage
     };
   }
-
-  
-
 }
