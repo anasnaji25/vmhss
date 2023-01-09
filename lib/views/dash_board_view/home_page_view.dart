@@ -180,19 +180,19 @@ class _HomePageViewState extends State<HomePageView> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Card(
+                            CustomCard(
                               size: size,
                               circleText: 'T',
                               totalNumber: '01',
                               underText: 'Total No Of Students',
                             ),
-                            Card(
+                            CustomCard(
                               size: size,
                               circleText: 'P',
                               totalNumber: '01',
                               underText: 'Today Present Students',
                             ),
-                            Card(
+                            CustomCard(
                               size: size,
                               circleText: 'A',
                               totalNumber: '01',
@@ -206,19 +206,19 @@ class _HomePageViewState extends State<HomePageView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Card(
+                            CustomCard(
                               size: size,
                               circleText: 'T',
                               totalNumber: '01',
                               underText: 'Total no of Staffs',
                             ),
-                            Card(
+                            CustomCard(
                               size: size,
                               circleText: 'P',
                               totalNumber: '01',
                               underText: 'Today Present Staffs',
                             ),
-                            Card(
+                            CustomCard(
                               size: size,
                               circleText: 'A',
                               totalNumber: '01',
@@ -240,8 +240,8 @@ class _HomePageViewState extends State<HomePageView> {
   }
 }
 
-class Card extends StatelessWidget {
-  const Card({
+class CustomCard extends StatelessWidget {
+  const CustomCard({
     Key? key,
     required this.circleText,
     required this.size,

@@ -1,6 +1,13 @@
 import 'package:attandence_admin_panel/controllers/attendence_controller.dart';
 import 'package:attandence_admin_panel/controllers/exam_controller.dart';
 import 'package:attandence_admin_panel/controllers/whatsspp_message_controller.dart';
+import 'package:attandence_admin_panel/views/dash_board_view/home_page_view.dart';
+import 'package:attandence_admin_panel/views/fees_view/FeesView.dart';
+import 'package:attandence_admin_panel/views/fees_view/assign_fee_structure.dart';
+import 'package:attandence_admin_panel/views/fees_view/concession_category.dart';
+import 'package:attandence_admin_panel/views/fees_view/manage_fee_structure_view.dart';
+import 'package:attandence_admin_panel/views/fees_view/miscellaneous_fee.dart';
+import 'package:attandence_admin_panel/views/fees_view/student_fee_listing.dart';
 import 'package:attandence_admin_panel/views/sign_in_view/spash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -40,8 +47,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: const SplashScreenView(),
-      // home: const StudentsListView(),
+      // home: const SplashScreenView(),
+      home: const MiscellaneousFee(),
       // home: const StudentManagementView(),
     );
   }

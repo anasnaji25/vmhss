@@ -20,6 +20,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 
 import '../../constants/decoration.dart';
+import '../../widgets/common_widgets/textFieldCommon.dart';
 import '../profile_view/profile_view.dart';
 
 class StudentManagementView extends StatefulWidget {
@@ -178,6 +179,7 @@ class _StudentManagementViewState extends State<StudentManagementView> {
 
   Uint8List? filePath;
   File? file;
+
   Future filePick() async {
     final result = await FilePicker.platform.pickFiles();
 
@@ -192,6 +194,7 @@ class _StudentManagementViewState extends State<StudentManagementView> {
 
   Uint8List? filePath1;
   File? file1;
+
   Future filePick1() async {
     final result = await FilePicker.platform.pickFiles();
 
@@ -206,6 +209,7 @@ class _StudentManagementViewState extends State<StudentManagementView> {
 
   Uint8List? filePath2;
   File? file2;
+
   Future filePick2() async {
     final result = await FilePicker.platform.pickFiles();
 
@@ -220,6 +224,7 @@ class _StudentManagementViewState extends State<StudentManagementView> {
 
   Uint8List? filePath3;
   File? file3;
+
   Future filePick3() async {
     final result = await FilePicker.platform.pickFiles();
 
@@ -234,6 +239,7 @@ class _StudentManagementViewState extends State<StudentManagementView> {
 
   Uint8List? filePath4;
   File? file4;
+
   Future filePick4() async {
     final result = await FilePicker.platform.pickFiles();
 
@@ -1452,37 +1458,6 @@ class _StudentManagementViewState extends State<StudentManagementView> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class TextFieldCommon extends StatelessWidget {
-  TextFieldCommon({
-    required this.controller,
-    required this.labelText,
-    required this.maxLine,
-  });
-
-  final TextEditingController controller;
-  final String labelText;
-  final int maxLine;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 330,
-          child: TextField(
-            maxLines: maxLine,
-            controller: controller,
-            decoration: kTextField.copyWith(
-              labelText: labelText,
-            ),
-          ),
-        )
-      ],
     );
   }
 }

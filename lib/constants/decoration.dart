@@ -14,3 +14,5 @@ var kDropdownDecoration = BoxDecoration(
     border: Border.all(color: Colors.black54.withOpacity(0.5)));
 
 var kDropdownTextStyle = const TextStyle(color: Colors.black54);
+
+var kCustomButtonTextStyle = const TextStyle(color: Colors.white, fontSize: 12);
