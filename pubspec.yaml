@@ -49,6 +49,7 @@ dependencies:
   dio:
   pdf: ^3.8.4
   excel: ^2.0.1
+  spreadsheet_decoder: ^2.1.1
 
 dev_dependencies:
   flutter_test:

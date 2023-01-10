@@ -28,6 +28,18 @@ class StudentManagementController extends GetxController {
     });
   }
 
+  importToStudentManagement(StudentModel studentsModel) async {
+    CollectionReference users =
+        FirebaseFirestore.instance.collection(studentsCollection);
+
+    users.add(studentsModel.toJson()).then((value) {
+     
+    }).catchError((error) {
+      Get.snackbar("Something went wrong", "",
+          maxWidth: 400, colorText: Colors.white, backgroundColor: Colors.red);
+    });
+  }
+
   getStudents() async {
     studentsList.clear();
     FirebaseFirestore.instance
