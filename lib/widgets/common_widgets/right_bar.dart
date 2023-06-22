@@ -35,7 +35,7 @@ class RightBar extends StatelessWidget {
               }),
           h20,
           IconBox(
-              icon: Icons.whatsapp,
+              icon: Icons.message,
               text: 'Whatsapp',
               onPress: () {
                 Get.to(() => const WhatsAppMessageView());

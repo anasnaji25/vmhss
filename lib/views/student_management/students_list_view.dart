@@ -514,12 +514,18 @@ class _StudentsListViewState extends State<StudentsListView> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              Container(
-                                                width: 50,
-                                                height: 50,
-                                                child: Image.network(
-                                                    studentManageController
-                                                        .studentsList[i].image),
+                                              InkWell(
+                                                onTap:(){
+                                                  print(studentManageController
+                                                      .studentsList[i].image);
+                                                },
+                                                child: Container(
+                                                  width: 50,
+                                                  height: 50,
+                                                  child: Image.network(
+                                                      studentManageController
+                                                          .studentsList[i].image),
+                                                ),
                                               ),
                                               const SizedBox(
                                                 width: 5,

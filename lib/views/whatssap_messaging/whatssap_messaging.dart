@@ -187,7 +187,7 @@ class _WhatsAppMessageViewState extends State<WhatsAppMessageView> {
                                   Row(
                                     children: [
                                       const Icon(
-                                        Icons.whatsapp,
+                                        Icons.message,
                                         color: Colors.white,
                                       ),
                                       w10,
@@ -213,7 +213,7 @@ class _WhatsAppMessageViewState extends State<WhatsAppMessageView> {
                         InkWell(
                           onTap: () {
                             // sendMarkList();
-                            Get.to(()=> SendMarkListView());
+                            Get.to(()=> const SendMarkListView());
                           },
                           child: Container(
                             height: 70,
@@ -231,7 +231,7 @@ class _WhatsAppMessageViewState extends State<WhatsAppMessageView> {
                                   Row(
                                     children: [
                                       const Icon(
-                                        Icons.whatsapp,
+                                        Icons.message,
                                         color: Colors.white,
                                       ),
                                       w10,
@@ -342,7 +342,7 @@ class _WhatsAppMessageViewState extends State<WhatsAppMessageView> {
                               controller: phoneNumberController,
                               decoration: InputDecoration(
                                 labelText: "Phone Number (whatsapp Number)*",
-                                prefix: Text("+91"),
+                                prefix: const Text("+91"),
                                 enabledBorder: borderstyle,
                                 focusedBorder: borderstyle,
                               )),
@@ -368,7 +368,7 @@ class _WhatsAppMessageViewState extends State<WhatsAppMessageView> {
                     padding: const EdgeInsets.only(left: 15),
                     child: Row(
                       children: [
-                        Text("Maths : "),
+                        const Text("Maths : "),
                         w10,
                         Container(
                           height: 50,
@@ -399,7 +399,7 @@ class _WhatsAppMessageViewState extends State<WhatsAppMessageView> {
                     padding: const EdgeInsets.only(left: 15),
                     child: Row(
                       children: [
-                        Text("English :"),
+                        const Text("English :"),
                         w10,
                         Container(
                           height: 50,
@@ -430,7 +430,7 @@ class _WhatsAppMessageViewState extends State<WhatsAppMessageView> {
                     padding: const EdgeInsets.only(left: 15),
                     child: Row(
                       children: [
-                        Text("Tamil :  "),
+                        const Text("Tamil :  "),
                         w10,
                         Container(
                           height: 50,
@@ -462,7 +462,7 @@ class _WhatsAppMessageViewState extends State<WhatsAppMessageView> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         whatsappConroller.isLoading.isTrue
-                            ? CircularProgressIndicator()
+                            ? const CircularProgressIndicator()
                             : InkWell(
                                 onTap: () {
                                   if (parentNameController.text.isNotEmpty &&

@@ -184,7 +184,7 @@ class _EventManagetViewState extends State<EventManagetView> {
                                   Row(
                                     children: [
                                       const Icon(
-                                        Icons.whatsapp,
+                                        Icons.message,
                                         color: Colors.white,
                                       ),
                                       w10,

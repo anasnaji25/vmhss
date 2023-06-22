@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: const SplashScreenView(),
+      home: const HomePageView(),
       // home: const MiscellaneousFee(),
       // home: const StudentManagementView(),
     );
